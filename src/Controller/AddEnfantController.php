@@ -38,7 +38,7 @@ final class AddEnfantController extends AbstractController
         $enfant->setEcolePrecedente($data['Ecole_precedente']);
         $enfant->setClassePrecedente($data['Classe_precedente']);
         $enfant->setEcoleActuelle($data['Ecole_actuelle']);
-        $enfant->setClasseActuelle($data['Actuelle_precedente']);
+        $enfant->setClasseActuelle($data['Classe_actuelle']);
         $enfant->setParentTuteur($data['Parent_tuteur']);
         $enfant->setMatieresPreferes($data['Matieres_preferes']);
         $enfant->setCentreInteret($data['Centre_interet']);
