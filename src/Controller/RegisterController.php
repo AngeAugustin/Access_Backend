@@ -50,6 +50,7 @@ class RegisterController extends AbstractController
         $user->setTelephone($data['Telephone']);
         $user->setPassword($data['Password']);
         $user->setRole($data['Role']);
+        $user->setDateInscription(new \DateTime());
 
         $entityManager->persist($user);
         $entityManager->flush();
