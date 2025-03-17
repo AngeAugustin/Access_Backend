@@ -14,7 +14,7 @@ final class GetAllEnfantsController extends AbstractController
     public function listeEnfants(EntityManagerInterface $entityManager): JsonResponse
     {
         $enfants = $entityManager->getRepository(Enfant::class)->createQueryBuilder('e')
-            ->select('e.NPI_enfant, e.Nom_enfant, e.Prenom_enfant, e.Classe_actuelle')
+            ->select('e.NPI_enfant, e.Nom_enfant, e.Prenom_enfant, e.Classe_actuelle, e.Sexe_enfant')
             ->getQuery()
             ->getResult();
 
