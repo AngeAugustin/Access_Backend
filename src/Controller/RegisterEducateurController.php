@@ -50,6 +50,7 @@ final class RegisterEducateurController extends AbstractController
         $user->setEmail($data['Email']);
         $user->setTelephone($data['Telephone']);
         $user->setAdresse($data['Adresse']);
+        $user->setMatiere($data['Matiere']);
         $user->setPassword($data['Password']);
         $user->setRole($data['Role']);
         $user->setStatutProfil('Nouveau');
