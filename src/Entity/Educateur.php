@@ -17,28 +17,28 @@ class Educateur
     #[ORM\Column(length: 20)]
     private ?string $NPI = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $Date_naissance = null;
 
-    #[ORM\Column(length: 200)]
+    #[ORM\Column(length: 200, nullable: true)]
     private ?string $Situation_matrimoniale = null;
 
-    #[ORM\Column(length: 200)]
+    #[ORM\Column(length: 200, nullable: true)]
     private ?string $Garant_1 = null;
 
-    #[ORM\Column(length: 200)]
+    #[ORM\Column(length: 200, nullable: true)]
     private ?string $Adresse_garant1 = null;
 
-    #[ORM\Column(length: 200)]
+    #[ORM\Column(length: 200, nullable: true)]
     private ?string $Garant_2 = null;
 
-    #[ORM\Column(length: 200)]
+    #[ORM\Column(length: 200, nullable: true)]
     private ?string $Adresse_garant2 = null;
 
-    #[ORM\Column(length: 200)]
+    #[ORM\Column(length: 200, nullable: true)]
     private ?string $Carte_identite = null;
 
-    #[ORM\Column(length: 200)]
+    #[ORM\Column(length: 200, nullable: true)]
     private ?string $Casier_judiciaire = null;
 
     public function getId(): ?int
