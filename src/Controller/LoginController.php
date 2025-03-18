@@ -51,6 +51,7 @@ class LoginController extends AbstractController
         $session->set('Email', $user->getEmail());
         $session->set('Role', $user->getRole());
         $session->set('NPI', $user->getNPI());
+        $session->set('Telephone', $user->getTelephone());
 
         // Retour de la réponse de succès
         return new JsonResponse([
