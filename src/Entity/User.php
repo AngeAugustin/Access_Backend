@@ -49,6 +49,9 @@ class User
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $Date_validation = null;
 
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Adresse = null;
+
     public function getNPI(): ?string
     {
         return $this->NPI;
@@ -215,5 +218,17 @@ class User
     public function isValidRole(string $Role): bool
     {
         return $this->Role === $Role;
+    }
+
+    public function getAdresse(): ?string
+    {
+        return $this->Adresse;
+    }
+
+    public function setAdresse(?string $Adresse): static
+    {
+        $this->Adresse = $Adresse;
+
+        return $this;
     }
 }

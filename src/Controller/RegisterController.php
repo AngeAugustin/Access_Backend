@@ -48,6 +48,7 @@ class RegisterController extends AbstractController
         $user->setFirstname($data['Firstname']);
         $user->setEmail($data['Email']);
         $user->setTelephone($data['Telephone']);
+        $user->setAdresse($data['Adresse']);
         $user->setPassword($data['Password']);
         $user->setRole($data['Role']);
         $user->setDateInscription(new \DateTime());
