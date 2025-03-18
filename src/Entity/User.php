@@ -55,6 +55,9 @@ class User
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Statut_profil = null;
 
+    #[ORM\Column(length: 240, nullable: true)]
+    private ?string $Photo = null;
+
     public function getNPI(): ?string
     {
         return $this->NPI;
@@ -243,6 +246,18 @@ class User
     public function setStatutProfil(?string $Statut_profil): static
     {
         $this->Statut_profil = $Statut_profil;
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->Photo;
+    }
+
+    public function setPhoto(?string $Photo): static
+    {
+        $this->Photo = $Photo;
 
         return $this;
     }
