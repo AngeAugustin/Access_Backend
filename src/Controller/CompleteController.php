@@ -20,7 +20,7 @@ class CompleteController extends AbstractController
         $data = $request->request->all();
         $files = $request->files->all();
 
-        if (empty($data)) {
+        if (empty($data)) { 
             return new JsonResponse(['error' => 'Données manquantes ou format incorrect'], Response::HTTP_BAD_REQUEST);
         }
 
