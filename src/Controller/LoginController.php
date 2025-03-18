@@ -45,7 +45,6 @@ class LoginController extends AbstractController
         }
 
         // Enregistrement des informations de l'utilisateur dans la session
-        $session->set('Username', $user->getUsername());
         $session->set('Name', $user->getName());
         $session->set('Firstname', $user->getFirstname());
         $session->set('Email', $user->getEmail());
@@ -56,7 +55,6 @@ class LoginController extends AbstractController
         // Retour de la réponse de succès
         return new JsonResponse([
             'Message' => 'Connexion réussie',
-            'Username' => $user->getUsername(),
             'Name' => $user->getName(),
             'Firstname' => $user->getFirstname(),
             'Email' => $user->getEmail(),
