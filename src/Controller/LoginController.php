@@ -51,6 +51,7 @@ class LoginController extends AbstractController
         $session->set('Role', $user->getRole());
         $session->set('NPI', $user->getNPI());
         $session->set('Telephone', $user->getTelephone());
+        $session->set('Adresse', $user->getAdresse());
 
         // Retour de la réponse de succès
         return new JsonResponse([
@@ -61,6 +62,7 @@ class LoginController extends AbstractController
             'Role' => $user->getRole(),
             'NPI' => $user->getNPI(),
             'Telephone' => $user->getTelephone(), 
+            'Adresse' => $user->getAdresse(), 
         ]);
     }
 }
