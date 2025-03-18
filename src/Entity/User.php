@@ -52,6 +52,9 @@ class User
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Adresse = null;
 
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Statut_profil = null;
+
     public function getNPI(): ?string
     {
         return $this->NPI;
@@ -228,6 +231,18 @@ class User
     public function setAdresse(?string $Adresse): static
     {
         $this->Adresse = $Adresse;
+
+        return $this;
+    }
+
+    public function getStatutProfil(): ?string
+    {
+        return $this->Statut_profil;
+    }
+
+    public function setStatutProfil(?string $Statut_profil): static
+    {
+        $this->Statut_profil = $Statut_profil;
 
         return $this;
     }

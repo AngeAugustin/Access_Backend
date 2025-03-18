@@ -51,6 +51,7 @@ class RegisterController extends AbstractController
         $user->setAdresse($data['Adresse']);
         $user->setPassword($data['Password']);
         $user->setRole($data['Role']);
+        $user->setStatutProfil('Nouveau');
         $user->setDateInscription(new \DateTime());
 
         $entityManager->persist($user);
