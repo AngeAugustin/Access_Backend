@@ -61,6 +61,12 @@ class User
     #[ORM\Column(nullable: true)]
     private ?int $Nombre_enfants = null;
 
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $Experience = null;
+
+    #[ORM\Column(length: 240, nullable: true)]
+    private ?string $Parcours = null;
+
     public function getNPI(): ?string
     {
         return $this->NPI;
@@ -273,6 +279,30 @@ class User
     public function setNombreEnfants(?int $Nombre_enfants): static
     {
         $this->Nombre_enfants = $Nombre_enfants;
+
+        return $this;
+    }
+
+    public function getExperience(): ?string
+    {
+        return $this->Experience;
+    }
+
+    public function setExperience(?string $Experience): static
+    {
+        $this->Experience = $Experience;
+
+        return $this;
+    }
+
+    public function getParcours(): ?string
+    {
+        return $this->Parcours;
+    }
+
+    public function setParcours(?string $Parcours): static
+    {
+        $this->Parcours = $Parcours;
 
         return $this;
     }

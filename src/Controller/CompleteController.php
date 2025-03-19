@@ -31,6 +31,8 @@ class CompleteController extends AbstractController
         }
 
         // Mise à jour des informations
+        $educateur->setExperience($data['Experience'] ?? null);
+        $educateur->setParcours($data['Parcours'] ?? null);
         $educateur->setDateNaissance(new \DateTime($data['Date_naissance'] ?? 'now'));
         $educateur->setSituationMatrimoniale($data['Situation_matrimoniale'] ?? null);
         $educateur->setGarant1($data['Garant_1'] ?? null);
@@ -53,7 +55,7 @@ class CompleteController extends AbstractController
         $entityManager->flush();
 
         return new JsonResponse([
-            'message' => 'Informations mises à jour avec succès',
+            'message' => 'Informations complétées avec succès',
             'NPI' => $educateur->getNPI()
         ]);
     }
