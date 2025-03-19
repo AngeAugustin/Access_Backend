@@ -15,7 +15,7 @@ final class GetAllEducateurController extends AbstractController
     {
         // Récupération des éducateurs avec une validation de la requête
         $educateurs = $entityManager->getRepository(User::class)->createQueryBuilder('u')
-            ->select('u.NPI, u.Name, u.Firstname, u.Matiere')
+            ->select('u.NPI, u.Name, u.Firstname, u.Matiere, u.Statut_profil')
             ->where('u.Role = :role')
             ->setParameter('role', 'EDUCATEUR')
             ->getQuery()
