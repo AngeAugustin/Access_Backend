@@ -58,6 +58,9 @@ class User
     #[ORM\Column(length: 240, nullable: true)]
     private ?string $Photo = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $Nombre_enfants = null;
+
     public function getNPI(): ?string
     {
         return $this->NPI;
@@ -258,6 +261,18 @@ class User
     public function setPhoto(?string $Photo): static
     {
         $this->Photo = $Photo;
+
+        return $this;
+    }
+
+    public function getNombreEnfants(): ?int
+    {
+        return $this->Nombre_enfants;
+    }
+
+    public function setNombreEnfants(?int $Nombre_enfants): static
+    {
+        $this->Nombre_enfants = $Nombre_enfants;
 
         return $this;
     }
