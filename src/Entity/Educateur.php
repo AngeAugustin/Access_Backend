@@ -41,6 +41,12 @@ class Educateur
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Casier_judiciaire = null;
 
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Experience = null;
+
+    #[ORM\Column(length: 240, nullable: true)]
+    private ?string $Parcours = null;
+
     public function getId(): ?int
     {
         return $this->Id;
@@ -150,6 +156,30 @@ class Educateur
     public function setCasierJudiciaire(string $Casier_judiciaire): static
     {
         $this->Casier_judiciaire = $Casier_judiciaire;
+
+        return $this;
+    }
+
+    public function getExperience(): ?string
+    {
+        return $this->Experience;
+    }
+
+    public function setExperience(?string $Experience): static
+    {
+        $this->Experience = $Experience;
+
+        return $this;
+    }
+
+    public function getParcours(): ?string
+    {
+        return $this->Parcours;
+    }
+
+    public function setParcours(?string $Parcours): static
+    {
+        $this->Parcours = $Parcours;
 
         return $this;
     }
