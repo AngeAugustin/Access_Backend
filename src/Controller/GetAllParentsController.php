@@ -15,7 +15,7 @@ final class GetAllParentsController extends AbstractController
     {
         // Récupération des parents avec une validation de la requête
         $parents = $entityManager->getRepository(User::class)->createQueryBuilder('u')
-            ->select('u.NPI, u.Name, u.Firstname, u.Matiere, u.Nombre_enfants')
+            ->select('u.NPI, u.Name, u.Firstname, u.Nombre_enfants')
             ->where('u.Role = :role')
             ->setParameter('role', 'PARENT')
             ->getQuery()
