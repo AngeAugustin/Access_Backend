@@ -47,6 +47,9 @@ class Educateur
     #[ORM\Column(length: 240, nullable: true)]
     private ?string $Parcours = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $Etoiles = null;
+
     public function getId(): ?int
     {
         return $this->Id;
@@ -180,6 +183,18 @@ class Educateur
     public function setParcours(?string $Parcours): static
     {
         $this->Parcours = $Parcours;
+
+        return $this;
+    }
+
+    public function getEtoiles(): ?int
+    {
+        return $this->Etoiles;
+    }
+
+    public function setEtoiles(?int $Etoiles): static
+    {
+        $this->Etoiles = $Etoiles;
 
         return $this;
     }
