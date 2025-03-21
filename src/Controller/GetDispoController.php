@@ -25,7 +25,7 @@ final class GetDispoController extends AbstractController
             'Dispo1' => $dispo->getDispo1(),
             'Dispo2' => $dispo->getDispo2(),
             'Dispo3' => $dispo->getDispo3(),
-            'Disp41' => $dispo->getDispo4(),
+            'Dispo4' => $dispo->getDispo4(),
         ];
 
         return new JsonResponse($data, Response::HTTP_OK);
