@@ -33,7 +33,7 @@ final class AddTutoratController extends AbstractController
         $tutorat->setReferenceTutorat($data['Reference_tutorat']);
         $tutorat->setNPIParent($data['NPI_parent']);
         $tutorat->setNPIEducateur($data['NPI_educateur']);
-        $tutorat->setNPIParent($data['NPI_parent']);
+        $tutorat->setNPIEnfant($data['NPI_enfant']);
         $tutorat->setDureeTutorat($data['Duree_tutorat']);
         $tutorat->setSeance1($data['Seance1']);
         $tutorat->setSeance2($data['Seance2']);
