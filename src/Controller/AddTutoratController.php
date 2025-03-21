@@ -10,11 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class AddTutoratController extends AbstractController 
+final class AddTutoratController extends AbstractController  
 {
     #[Route('/api/add_tutorat', name: 'api_add_tutorat', methods: ['POST'])]
     public function apiAddTutorat(Request $request, EntityManagerInterface $entityManager): JsonResponse
-    { 
+    {  
 
         $data = json_decode($request->getContent(), true);
     

@@ -21,7 +21,7 @@ class GetEnfantController extends AbstractController
         }
 
         // Préparer les données de l'enfant
-        $data = [
+        $data = [ 
             'NPI' => $enfant->getNPI(),
             'NPI_enfant' => $enfant->getNPIEnfant(),
             'Nom_enfant' => $enfant->getNomEnfant(),
