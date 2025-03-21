@@ -50,6 +50,18 @@ class Educateur
     #[ORM\Column(nullable: true)]
     private ?int $Etoiles = null;
 
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Dispo1 = null;
+
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Dispo2 = null;
+
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Dispo3 = null;
+
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Dispo4 = null;
+
     public function getId(): ?int
     {
         return $this->Id;
@@ -195,6 +207,54 @@ class Educateur
     public function setEtoiles(?int $Etoiles): static
     {
         $this->Etoiles = $Etoiles;
+
+        return $this;
+    }
+
+    public function getDispo1(): ?string
+    {
+        return $this->Dispo1;
+    }
+
+    public function setDispo1(?string $Dispo1): static
+    {
+        $this->Dispo1 = $Dispo1;
+
+        return $this;
+    }
+
+    public function getDispo2(): ?string
+    {
+        return $this->Dispo2;
+    }
+
+    public function setDispo2(?string $Dispo2): static
+    {
+        $this->Dispo2 = $Dispo2;
+
+        return $this;
+    }
+
+    public function getDispo3(): ?string
+    {
+        return $this->Dispo3;
+    }
+
+    public function setDispo3(?string $Dispo3): static
+    {
+        $this->Dispo3 = $Dispo3;
+
+        return $this;
+    }
+
+    public function getDispo4(): ?string
+    {
+        return $this->Dispo4;
+    }
+
+    public function setDispo4(?string $Dispo4): static
+    {
+        $this->Dispo4 = $Dispo4;
 
         return $this;
     }

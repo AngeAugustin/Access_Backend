@@ -39,6 +39,10 @@ class CompleteController extends AbstractController
         $educateur->setAdresseGarant1($data['Adresse_garant1'] ?? null);
         $educateur->setGarant2($data['Garant_2'] ?? null);
         $educateur->setAdresseGarant2($data['Adresse_garant2'] ?? null);
+        $educateur->setDispo1($data['Dispo1'] ?? null);
+        $educateur->setDispo2($data['Dispo2'] ?? null);
+        $educateur->setDispo3($data['Dispo3'] ?? null);
+        $educateur->setDispo4($data['Dispo4'] ?? null);
 
         // Gestion des fichiers : Carte d'identité & Casier judiciaire
         if (isset($files['Carte_identite'])) {
