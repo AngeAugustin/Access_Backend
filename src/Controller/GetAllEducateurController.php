@@ -25,8 +25,9 @@ final class GetAllEducateurController extends AbstractController
 
         // Si aucun éducateur n'est trouvé
         if (empty($educateurs)) {
-            return $this->json(['message' => 'Aucun éducateur trouvé'], JsonResponse::HTTP_NOT_FOUND);
+            return $this->json([], JsonResponse::HTTP_OK); // Retourne un tableau vide au lieu d'un message
         }
+        
 
         // Retourner les éducateurs sous format JSON
         return $this->json($educateurs, JsonResponse::HTTP_OK);
