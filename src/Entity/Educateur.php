@@ -41,8 +41,8 @@ class Educateur
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Casier_judiciaire = null;
 
-    #[ORM\Column(length: 200, nullable: true)]
-    private ?string $Experience = null;
+    #[ORM\Column(nullable: true)]
+    private ?int $Experience = null;
 
     #[ORM\Column(length: 240, nullable: true)]
     private ?string $Parcours = null;
