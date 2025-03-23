@@ -64,7 +64,7 @@ final class RegisterEducateurController extends AbstractController
          $educateur = new Educateur();
          $educateur->setNPI($data['NPI']);
          $educateur->setDateNaissance(new \DateTime());
-         $educateur->setEtoiles(2);
+         $educateur->setEtoiles(0);
  
          $entityManager->persist($educateur);
          $entityManager->flush();
