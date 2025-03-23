@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Educateur;
-use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -45,24 +44,6 @@ class CompleteController extends AbstractController
         $educateur->setDispo3($data['Dispo3'] ?? null);
         $educateur->setDispo4($data['Dispo4'] ?? null);
 
-        // Gestion du Nombre_etoiles en fonction de l'expérience
-        $experience = (int)($data['Experience'] ?? 0);
-
-        if ($experience <= 5) {
-            $nombreEtoiles = 3;
-        } elseif ($experience < 8) {
-            $nombreEtoiles = 4;
-        } else {
-            $nombreEtoiles = 5;
-        }
-
-        // Mise à jour du nombre d'étoiles dans l'entité User
-        $user = $entityManager->getRepository(User::class)->findOneBy(['NPI' => $educateur->getNPI()]);
-        if ($user) {
-            $user->setNombreEtoiles($nombreEtoiles);
-            $entityManager->persist($user);
-        }
-
         // Gestion des fichiers : Carte d'identité & Casier judiciaire
         if (isset($files['Carte_identite'])) {
             $carteIdentitePath = $this->uploadFile($files['Carte_identite'], 'carte_identite');
@@ -79,8 +60,7 @@ class CompleteController extends AbstractController
 
         return new JsonResponse([
             'message' => 'Informations complétées avec succès',
-            'NPI' => $educateur->getNPI(),
-            'Nombre_etoiles' => $nombreEtoiles
+            'NPI' => $educateur->getNPI()
         ]);
     }
 
