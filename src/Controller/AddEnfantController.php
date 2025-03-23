@@ -3,29 +3,39 @@
 namespace App\Controller;
 
 use App\Entity\Enfant;
+use App\Entity\User; 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request; 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 final class AddEnfantController extends AbstractController
 {
     #[Route('/api/add_enfant', name: 'api_add_enfant', methods: ['POST'])]
     public function apiAddEnfant(Request $request, EntityManagerInterface $entityManager): JsonResponse
     { 
-
         $data = json_decode($request->getContent(), true);
     
         if ($data === null) {
             return new JsonResponse(['error' => 'Invalid JSON format'], Response::HTTP_BAD_REQUEST);
         }
     
-        // Existence d'un enfant avec le meme NPI
+        // Existence d'un enfant avec le même NPI
         $existingNPI = $entityManager->getRepository(Enfant::class)->findOneBy(['NPI_enfant' => $data['NPI_enfant']]);
         if ($existingNPI) {
             return new JsonResponse(['error' => 'Un enfant avec le même NPI existe déjà'], Response::HTTP_BAD_REQUEST);
         }
+
+        // Récupération de l'utilisateur via le NPI
+        $user = $entityManager->getRepository(User::class)->findOneBy(['NPI' => $data['NPI']]);
+        if (!$user) {
+            return new JsonResponse(['error' => 'Utilisateur non trouvé'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Incrémentation du nombre d'enfants
+        $user->setNombreEnfants($user->getNombreEnfants() + 1);
 
         // Enregistrement dans Enfant
         $enfant = new Enfant();
@@ -53,8 +63,13 @@ final class AddEnfantController extends AbstractController
         $enfant->setNiveauSvt($data['Niveau_svt']);
 
         $entityManager->persist($enfant);
+        $entityManager->persist($user); // Persiste les changements sur l'utilisateur
         $entityManager->flush();
     
-        return new JsonResponse(['Message' => 'Enfant ajouté avec succès', 'Nom_enfant' => $enfant->getNomEnfant()]);
+        return new JsonResponse([
+            'Message' => 'Enfant ajouté avec succès',
+            'Nom_enfant' => $enfant->getNomEnfant(),
+            'Nombre_enfants' => $user->getNombreEnfants()
+        ]);
     }
 }
