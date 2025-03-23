@@ -54,6 +54,7 @@ final class RegisterEducateurController extends AbstractController
         $user->setPassword($data['Password']);
         $user->setRole($data['Role']);
         $user->setStatutProfil('Nouveau');
+        $user->setNombreEnfants(0);
         $user->setDateInscription(new \DateTime());
 
         $entityManager->persist($user);
