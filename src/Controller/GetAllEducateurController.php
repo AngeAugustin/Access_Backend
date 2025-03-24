@@ -20,6 +20,8 @@ final class GetAllEducateurController extends AbstractController
             ->leftJoin('App\Entity\Educateur', 'e', 'WITH', 'e.NPI = u.NPI')
             ->where('u.Role = :role')
             ->setParameter('role', 'EDUCATEUR')
+            ->where('u.Statut_profil = :statutProfile')
+            ->setParameter('statutProfile', 'Vérifié')
             ->getQuery()
             ->getResult();
 
