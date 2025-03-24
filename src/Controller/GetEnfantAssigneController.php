@@ -18,7 +18,7 @@ final class GetEnfantAssigneController extends AbstractController
         // Création de la requête pour récupérer tous les assignes
         $query = $entityManager->getRepository(Tutorat::class)->createQueryBuilder('t')
             ->select('t.Reference_tutorat, e.Nom_enfant, e.Prenom_enfant, u.Matiere')
-            ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI = t.NPI_enfant') 
+            ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI_enfant = t.NPI_enfant') 
             ->leftJoin(User::class, 'u', 'WITH', 'u.NPI = t.NPI_educateur') 
             ->getQuery();
 
