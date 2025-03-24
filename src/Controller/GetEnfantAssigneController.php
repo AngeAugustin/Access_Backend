@@ -12,14 +12,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class GetEnfantAssigneController extends AbstractController
 {
-    #[Route('/api/get_assignes', name: 'api_get_assignes', methods: ['GET'])]
-    public function getAssignes(EntityManagerInterface $entityManager): JsonResponse
+    #[Route('/api/get_assignes/{NPI_parent}', name: 'api_get_assignes', methods: ['GET'])]
+    public function getAssignes(string $NPI_parent, EntityManagerInterface $entityManager): JsonResponse
     {
         // Création de la requête pour récupérer tous les assignes
         $query = $entityManager->getRepository(Tutorat::class)->createQueryBuilder('t')
             ->select('t.Reference_tutorat, e.Nom_enfant, e.Prenom_enfant, u.Matiere')
             ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI_enfant = t.NPI_enfant') 
             ->leftJoin(User::class, 'u', 'WITH', 'u.NPI = t.NPI_educateur') 
+            ->where('u.NPI_parent = :NPI_parent')
+            ->setParameter('NPI_parent', $NPI_parent)
             ->getQuery();
 
         // Exécuter la requête pour récupérer tous les assignes
