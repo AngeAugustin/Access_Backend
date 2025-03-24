@@ -16,7 +16,7 @@ final class GetEducateurController extends AbstractController
     {
         // Récupération de l'éducateur par son NPI
         $query = $entityManager->getRepository(User::class)->createQueryBuilder('u')
-            ->select('u.NPI, u.Name, u.Firstname, u.Matiere, u.Email, u.Statut_profil, u.Adresse, e.Experience, e.Parcours, e.Etoiles')
+            ->select('u.NPI, u.Name, u.Firstname, u.Matiere, u.Email, u.Telephone, u.Statut_profil, u.Adresse, e.Situation_matrimoniale, e.Experience, e.Parcours, e.Etoiles')
             ->leftJoin(Educateur::class, 'e', 'WITH', 'e.NPI = u.NPI')
             ->where('u.Role = :role')
             ->andWhere('u.NPI = :NPI')
