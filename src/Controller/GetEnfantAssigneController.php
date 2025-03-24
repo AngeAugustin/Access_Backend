@@ -17,9 +17,9 @@ final class GetEnfantAssigneController extends AbstractController
     {
         // Création de la requête pour récupérer tous les assignes
         $query = $entityManager->getRepository(Tutorat::class)->createQueryBuilder('t')
-            ->select('t.Reference_tutorat, t.NPI_parent, e.Nom_enfant, e.Prenom_enfant, u.Matiere')
-            ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI_enfant = t.NPI_enfant') 
-            ->leftJoin(User::class, 'u', 'WITH', 'u.NPI = t.NPI_educateur') 
+            ->select('t.Reference_tutorat', 't.NPI_parent', 'e.Nom_enfant', 'e.Prenom_enfant', 'u.Matiere')
+            ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI_enfant = t.NPI_enfant')
+            ->leftJoin(User::class, 'u', 'WITH', 'u.NPI = t.NPI_educateur')
             ->where('t.NPI_parent = :NPI_parent')
             ->setParameter('NPI_parent', $NPI_parent)
             ->getQuery();
@@ -29,10 +29,17 @@ final class GetEnfantAssigneController extends AbstractController
 
         // Vérifier si des tutorats ont été trouvés
         if (empty($assignes)) {
-            return $this->json(['message' => 'Aucun tutorat trouvé'], JsonResponse::HTTP_NOT_FOUND);
+            return $this->json([
+                'message' => 'Aucun tutorat trouvé pour le parent avec NPI ' . $NPI_parent,
+                'status' => JsonResponse::HTTP_NOT_FOUND
+            ], JsonResponse::HTTP_NOT_FOUND);
         }
 
         // Retourner les tutorats au format JSON
-        return $this->json($assignes, JsonResponse::HTTP_OK);
+        return $this->json([
+            'status' => JsonResponse::HTTP_OK,
+            'data' => $assignes
+        ], JsonResponse::HTTP_OK);
     }
 }
+
