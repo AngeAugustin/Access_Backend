@@ -22,7 +22,7 @@ final class RejeterProfilController extends AbstractController
             return new JsonResponse(['error' => 'Utilisateur non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
-        $user->setStatutProfil('Vérifié');
+        $user->setStatutProfil('Rejeté');
 
         $entityManager->persist($user);
         $entityManager->flush();
