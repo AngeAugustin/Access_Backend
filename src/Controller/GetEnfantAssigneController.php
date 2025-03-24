@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 final class GetTutoratController extends AbstractController
 {
     #[Route('/api/get_assignes', name: 'api_get_assignes', methods: ['GET'])]
-    public function getTutorats(EntityManagerInterface $entityManager): JsonResponse
+    public function getAssignes(EntityManagerInterface $entityManager): JsonResponse
     {
         // Création de la requête pour récupérer tous les assignes
         $query = $entityManager->getRepository(Tutorat::class)->createQueryBuilder('t')
@@ -22,15 +22,15 @@ final class GetTutoratController extends AbstractController
             ->leftJoin(User::class, 'u', 'WITH', 'u.NPI = t.NPI_educateur') 
             ->getQuery();
 
-        // Exécuter la requête pour récupérer tous les tutorats
-        $tutorats = $query->getResult();
+        // Exécuter la requête pour récupérer tous les assignes
+        $assignes = $query->getResult();
 
         // Vérifier si des tutorats ont été trouvés
-        if (empty($tutorats)) {
+        if (empty($assignes)) {
             return $this->json(['message' => 'Aucun tutorat trouvé'], JsonResponse::HTTP_NOT_FOUND);
         }
 
         // Retourner les tutorats au format JSON
-        return $this->json($tutorats, JsonResponse::HTTP_OK);
+        return $this->json($assignes, JsonResponse::HTTP_OK);
     }
 }
