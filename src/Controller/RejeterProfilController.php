@@ -9,10 +9,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class ValiderProfilController extends AbstractController
+final class RejeterProfilController extends AbstractController
 {
-    #[Route('/api/valider/{NPI}', name: 'api_valider', methods: ['PUT'])]
-    public function valid(string $NPI, EntityManagerInterface $entityManager): JsonResponse
+    #[Route('/api/rejeter/{NPI}', name: 'api_rejeter', methods: ['PUT'])]
+    public function rejet(string $NPI, EntityManagerInterface $entityManager): JsonResponse
     {
         // Trouver l'utilisateur par son NPI
         $user = $entityManager->getRepository(User::class)->findOneBy(['NPI' => $NPI]);
@@ -27,6 +27,6 @@ final class ValiderProfilController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return new JsonResponse(['message' => 'Statut du profil validé avec succès'], Response::HTTP_OK);
+        return new JsonResponse(['message' => 'Statut du profil rejeté avec succès'], Response::HTTP_OK);
     }
 }
