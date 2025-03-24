@@ -19,8 +19,8 @@ final class GetAllEducateurController extends AbstractController
             ->select('u.NPI, u.Name, u.Firstname, u.Matiere, u.Statut_profil, u.Adresse, e.Experience, e.Parcours, e.Etoiles')
             ->leftJoin('App\Entity\Educateur', 'e', 'WITH', 'e.NPI = u.NPI')
             ->where('u.Role = :role')
+            ->andWhere('u.Statut_profil = :statutProfile')
             ->setParameter('role', 'EDUCATEUR')
-            ->where('u.Statut_profil = :statutProfile')
             ->setParameter('statutProfile', 'Vérifié')
             ->getQuery()
             ->getResult();
