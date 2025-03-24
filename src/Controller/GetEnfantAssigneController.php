@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class GetTutoratController extends AbstractController
+final class GetEnfantAssigneController extends AbstractController
 {
     #[Route('/api/get_assignes', name: 'api_get_assignes', methods: ['GET'])]
     public function getAssignes(EntityManagerInterface $entityManager): JsonResponse
