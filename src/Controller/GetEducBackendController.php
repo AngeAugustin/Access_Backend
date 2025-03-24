@@ -16,7 +16,7 @@ final class GetEducBackendController extends AbstractController
     {
         // Récupération des éducateurs avec une jointure sur la table Etudiant
         $educateurs = $entityManager->getRepository(User::class)->createQueryBuilder('u')
-            ->select('u.NPI, u.Name, u.Firstname, u.Matiere, u.Email, u.Statut_profil, u.Adresse, e.Experience, e.Parcours, e.Etoiles')
+            ->select('u.NPI, u.Name, u.Firstname, u.Matiere, u.Statut_profil, u.Adresse, e.Experience, e.Parcours, e.Etoiles')
             ->leftJoin('App\Entity\Educateur', 'e', 'WITH', 'e.NPI = u.NPI')
             ->where('u.Role = :role')
             ->setParameter('role', 'EDUCATEUR')
