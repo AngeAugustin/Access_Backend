@@ -20,7 +20,7 @@ final class GetEnfantAssigneController extends AbstractController
             ->select('t.Reference_tutorat, t.NPI_parent, e.Nom_enfant, e.Prenom_enfant, u.Matiere')
             ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI_enfant = t.NPI_enfant') 
             ->leftJoin(User::class, 'u', 'WITH', 'u.NPI = t.NPI_educateur') 
-            ->where('u.NPI_parent = :NPI_parent')
+            ->where('t.NPI_parent = :NPI_parent')
             ->setParameter('NPI_parent', $NPI_parent)
             ->getQuery();
 
