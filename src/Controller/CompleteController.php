@@ -44,7 +44,7 @@ class CompleteController extends AbstractController
         $educateur->setDispo3($data['Dispo3'] ?? null);
         $educateur->setDispo4($data['Dispo4'] ?? null);
 
-        // Gestion des fichiers : Carte d'identité & Casier judiciaire
+        // Gestion des fichiers : Carte d'identité, Casier judiciaire & Photo_educateur
         if (isset($files['Carte_identite'])) {
             $carteIdentitePath = $this->uploadFile($files['Carte_identite'], 'carte_identite');
             $educateur->setCarteIdentite($carteIdentitePath);
@@ -53,6 +53,11 @@ class CompleteController extends AbstractController
         if (isset($files['Casier_judiciaire'])) {
             $casierJudiciairePath = $this->uploadFile($files['Casier_judiciaire'], 'casier_judiciaire');
             $educateur->setCasierJudiciaire($casierJudiciairePath);
+        }
+
+        if (isset($files['Photo_educateur'])) {
+            $photoEducateurPath = $this->uploadFile($files['Photo_educateur'], 'photo_educateur');
+            $educateur->setPhotoEducateur($photoEducateurPath);
         }
 
         $entityManager->persist($educateur);
