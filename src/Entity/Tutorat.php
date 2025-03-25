@@ -37,6 +37,9 @@ class Tutorat
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Statut_tutorat = null;
 
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Observation_generale = null;
+
     public function getReferenceTutorat(): ?string
     {
         return $this->Reference_tutorat;
@@ -141,6 +144,18 @@ class Tutorat
     public function setStatutTutorat(?string $Statut_tutorat): static
     {
         $this->Statut_tutorat = $Statut_tutorat;
+
+        return $this;
+    }
+
+    public function getObservationGenerale(): ?string
+    {
+        return $this->Observation_generale;
+    }
+
+    public function setObservationGenerale(?string $Observation_generale): static
+    {
+        $this->Observation_generale = $Observation_generale;
 
         return $this;
     }
