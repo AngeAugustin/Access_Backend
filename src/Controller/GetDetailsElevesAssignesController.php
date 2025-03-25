@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Tutorat;
 use App\Entity\Enfant;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,8 +17,9 @@ final class GetDetailsElevesAssignesController extends AbstractController
     {
         // Création de la requête pour récupérer tous les détails de l'eleve assigne
         $query = $entityManager->getRepository(Tutorat::class)->createQueryBuilder('t')
-            ->select('t.NPI_enfant', 't.Duree_tutorat', 't.Observation_generale', 'e.Nom_enfant', 'e.Prenom_enfant', 'e.Classe_actuelle', 'e.Ecole_actuelle')
+            ->select('t.NPI_enfant', 't.Duree_tutorat', 't.Observation_generale', 'e.Nom_enfant', 'e.Prenom_enfant', 'e.Classe_actuelle', 'e.Ecole_actuelle', 'u.Adresse')
             ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI_enfant = t.NPI_enfant')
+            ->leftJoin(User::class, 'u', 'WITH', 'u.NPI = t.NPI_parent')
             ->where('t.NPI_enfant = :NPI_enfant')
             ->setParameter('NPI_enfant', $NPI_enfant)
             ->getQuery();
