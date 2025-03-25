@@ -16,7 +16,7 @@ final class GetDetailsElevesAssignesController extends AbstractController
     {
         // Création de la requête pour récupérer tous les détails de l'eleve assigne
         $query = $entityManager->getRepository(Tutorat::class)->createQueryBuilder('t')
-            ->select('t.NPI_enfant', 't.Duree', 't.Observation_generale', 'e.Nom_enfant', 'e.Prenom_enfant', 'e.Classe_actuelle', 'e.Ecole_actuelle')
+            ->select('t.NPI_enfant', 't.Duree_tutorat', 't.Observation_generale', 'e.Nom_enfant', 'e.Prenom_enfant', 'e.Classe_actuelle', 'e.Ecole_actuelle')
             ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI_enfant = t.NPI_enfant')
             ->where('t.NPI_enfant = :NPI_enfant')
             ->setParameter('NPI_enfant', $NPI_enfant)
