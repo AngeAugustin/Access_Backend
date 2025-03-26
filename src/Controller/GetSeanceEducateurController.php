@@ -15,10 +15,10 @@ final class GetSeanceEducateurController extends AbstractController
     public function getSeanceEducateur(string $NPI_educateur, EntityManagerInterface $entityManager): JsonResponse
     {
         // Création de la requête pour récupérer toutes les séances de l'éducateur
-        $query = $entityManager->getRepository(Seance::class)->createQueryBuilder('t')
+        $query = $entityManager->getRepository(Seance::class)->createQueryBuilder('s')
             ->select('s.Id_seance', 's.Date_seance', 'e.Nom_enfant', 'e.Prenom_enfant', 's.NPI_enfant')
-            ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI_enfant = t.NPI_enfant')
-            ->where('t.NPI_educateur = :NPI_educateur')
+            ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI_enfant = s.NPI_enfant')
+            ->where('s.NPI_educateur = :NPI_educateur')
             ->setParameter('NPI_educateur', $NPI_educateur)
             ->getQuery();
 
