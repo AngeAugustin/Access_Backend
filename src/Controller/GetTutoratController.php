@@ -19,7 +19,7 @@ final class GetTutoratController extends AbstractController
         // Récupération des tutorats avec jointure sur la table User et filtre sur le NPI_parent
         $tutorats = $entityManager->getRepository(Tutorat::class)
             ->createQueryBuilder('t')
-            ->select('t.NPI_educateur, u.Name, u.Firstname, u.Matiere')
+            ->select('DISTINCT t.NPI_educateur, u.Name, u.Firstname, u.Matiere')
             ->leftJoin(User::class, 'u', 'WITH', 'u.NPI = t.NPI_educateur')
             ->where('t.NPI_parent = :npiParent')
             ->setParameter('npiParent', $NPI_parent)
