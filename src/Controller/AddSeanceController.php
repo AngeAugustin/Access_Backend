@@ -25,7 +25,7 @@ final class AddSeanceController extends AbstractController
         // Vérification de l'existence de l'ID séance
         $existingID = $entityManager->getRepository(Seance::class)->findOneBy(['Id_seance' => $data['Id_seance']]);
         if ($existingID) {
-            return new JsonResponse(['error' => 'Une séance existe déjà avec cet ID. Refaites le processus.'], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'Cette séance a déjà été validée.'], Response::HTTP_BAD_REQUEST);
         }
 
         // Vérification de la validité de la Reference_tutorat
