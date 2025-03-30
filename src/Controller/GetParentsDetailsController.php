@@ -15,55 +15,30 @@ class GetParentsDetailsController extends AbstractController
     #[Route('/api/get_parents_details/{NPI}', name: 'api_get_parents_details', methods: ['GET'])]
     public function getParentsDetails(string $NPI, EntityManagerInterface $entityManager): JsonResponse
     {
-        // 1️⃣ Récupérer l'utilisateur par son NPI
-        $userRepo = $entityManager->getRepository(User::class);
-        $user = $userRepo->findOneBy(['NPI' => $NPI]);
+        // Création de la requête pour récupérer t
+        $query = $entityManager->getRepository(User::class)->createQueryBuilder('u')
+            ->select('u.NPI', 'u.Name', 'u.Firstname', 'u.Email', 'u.Adresse', 'e.Nom_enfant', 'e.Prenom_enfant', 'e.Classe_actuelle', 't.NPI_educateur')
+            ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI = u.NPI')
+            ->leftJoin(Tutorat::class, 't', 'WITH', 't.NPI_parent = u.NPI')
+            ->where('u.NPI = :NPI')
+            ->setParameter('NPI', $NPI)
+            ->getQuery();
 
-        if (!$user) {
-            return new JsonResponse(['Error' => 'Utilisateur non trouvé'], 404);
+        // Exécuter la requête pour récupérer 
+        $details = $query->getResult();
+
+        // Vérifier si des détails ont été trouvés
+        if (empty($details)) {
+            return $this->json([
+                'message' => 'Aucun détail trouvé pour le parent avec NPI ' . $NPI,
+                'status' => JsonResponse::HTTP_NOT_FOUND
+            ], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        // 2️⃣ Récupérer les informations de l'utilisateur
-        $responseData = [
-            'Name'     => $user->getName(),
-            'Firstname' => $user->getFirstname(),
-            'NPI'      => $user->getNPI(),
-            'Email'    => $user->getEmail(),
-            'Adresse'  => $user->getAdresse(),
-            'Enfants'  => [],
-            'Educateurs' => []
-        ];
-
-        // 3️⃣ Récupérer les enfants liés à cet utilisateur
-        $enfantRepo = $entityManager->getRepository(Enfant::class);
-        $enfants = $enfantRepo->findBy(['NPI' => $NPI]);
-
-        foreach ($enfants as $enfant) {
-            $responseData['Enfants'][] = [
-                'Nom_enfant'     => $enfant->getNomEnfant(),
-                'Prenom_enfant'  => $enfant->getPrenomEnfant(),
-                'Classe_actuelle' => $enfant->getClasseActuelle(),
-            ];
-        }
-
-        // 4️⃣ Récupérer les éducateurs liés via la table Tutorat
-        $tutoratRepo = $entityManager->getRepository(Tutorat::class);
-        $tutorats = $tutoratRepo->findBy(['NPI_Parent' => $NPI]);
-
-        foreach ($tutorats as $tutorat) {
-            $npiEducateur = $tutorat->getNpiEducateur();
-            $educateur = $userRepo->findOneBy(['NPI' => $npiEducateur]);
-
-            if ($educateur) {
-                $responseData['Educateurs'][] = [
-                    'Name'     => $educateur->getName(),
-                    'Firstname' => $educateur->getFirstname(),
-                    'Matiere'  => $educateur->getMatiere(),
-                ];
-            }
-        }
-
-        // 5️⃣ Retourner la réponse JSON unique
-        return new JsonResponse($responseData);
+        // Retourner les détails au format JSON
+        return $this->json([
+            'status' => JsonResponse::HTTP_OK,
+            'data' => $details
+        ], JsonResponse::HTTP_OK);
     }
 }
