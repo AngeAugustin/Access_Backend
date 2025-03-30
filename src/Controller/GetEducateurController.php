@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Educateur;
+use App\Entity\Tutorat;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,8 +17,9 @@ final class GetEducateurController extends AbstractController
     {
         // Récupération de l'éducateur par son NPI
         $query = $entityManager->getRepository(User::class)->createQueryBuilder('u')
-            ->select('u.NPI, u.Name, u.Firstname, u.Matiere, u.Email, u.Telephone, u.Statut_profil, u.Adresse, e.Situation_matrimoniale, e.Experience, e.Parcours, e.Etoiles')
+            ->select('u.NPI, u.Name, u.Firstname, u.Matiere, u.Email, u.Telephone, u.Statut_profil, u.Adresse, e.Situation_matrimoniale, e.Experience, e.Parcours, e.Etoiles, t.NPI_enfant, t.Duree_tutorat')
             ->leftJoin(Educateur::class, 'e', 'WITH', 'e.NPI = u.NPI')
+            ->leftJoin(Tutorat::class, 't', 'WITH', 't.NPI_educateur = u.NPI')
             ->where('u.Role = :role')
             ->andWhere('u.NPI = :NPI')
             ->setParameter('role', 'EDUCATEUR')
