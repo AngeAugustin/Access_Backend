@@ -18,7 +18,7 @@ final class GetEducateurController extends AbstractController
     {
         // Création de la requête pour récupérer les données nécessaires, y compris les informations de l'enfant
         $query = $entityManager->getRepository(User::class)->createQueryBuilder('u')
-            ->select('u.NPI', 'u.Name', 'u.Firstname', 'u.Email', 'u.Adresse', 'u.Matiere', 'd.Experience', 'd.Parcours', 't.NPI_enfant', 't.Duree_tutorat', 'e.Nom_enfant', 'e.Prenom_enfant', 'e.Classe_actuelle')
+            ->select('u.NPI', 'u.Name', 'u.Firstname', 'u.Email', 'u.Adresse', 'd.Matiere', 'd.Experience', 'd.Parcours', 't.NPI_enfant', 't.Duree_tutorat', 'e.Nom_enfant', 'e.Prenom_enfant', 'e.Classe_actuelle')
             ->leftJoin(Educateur::class, 'd', 'WITH', 'd.NPI = u.NPI')
             ->leftJoin(Tutorat::class, 't', 'WITH', 't.NPI_educateur = u.NPI')
             ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI_enfant = t.NPI_enfant') // Jointure avec la table Enfant
@@ -37,23 +37,23 @@ final class GetEducateurController extends AbstractController
             ], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        // Initialisation des tableaux pour séparer les informations
-        $infoEducateur = [];
+        // Initialisation des tableaux pour les informations
+        $infoEducateur = [
+            'NPI' => $details[0]['NPI'],
+            'Name' => $details[0]['Name'],
+            'Firstname' => $details[0]['Firstname'],
+            'Email' => $details[0]['Email'],
+            'Adresse' => $details[0]['Adresse'],
+            'Matiere' => $details[0]['Matiere'],
+            'Experience' => $details[0]['Experience'],
+            'Parcours' => $details[0]['Parcours']
+        ];
+
+        // Initialisation du tableau pour les informations de tutorat
         $infoTutorat = [];
 
         // Parcourir les résultats et séparer les données dans les tableaux respectifs
         foreach ($details as $detail) {
-            // Vérifier si l'information éducateur existe déjà dans le tableau (évitons les doublons)
-            $educateurInfo = [
-                'Parcours' => $detail['Parcours'],
-                'Experience' => $detail['Experience'],
-                'Matiere' => $detail['Matiere']
-            ];
-
-            if (!in_array($educateurInfo, $infoEducateur)) {
-                $infoEducateur[] = $educateurInfo;
-            }
-
             // Information de tutora (remplacer NPI_enfant par les infos de l'enfant)
             $infoTutorat[] = [
                 'Nom_enfant' => $detail['Nom_enfant'],
@@ -63,7 +63,7 @@ final class GetEducateurController extends AbstractController
             ];
         }
 
-        // Retourner les détails séparés dans la réponse JSON
+        // Retourner les détails dans la réponse JSON avec les informations de l'éducateur en premier
         return $this->json([
             'status' => JsonResponse::HTTP_OK,
             'data' => [
