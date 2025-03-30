@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Educateur;
 use App\Entity\Tutorat;
+use App\Entity\Enfant;  // Ajoutez cette ligne pour importer la table Enfant
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,11 +16,12 @@ final class GetEducateurController extends AbstractController
     #[Route('/api/get_educateur/{NPI}', name: 'api_get_educateur', methods: ['GET'])]
     public function getEducateur(string $NPI, EntityManagerInterface $entityManager): JsonResponse
     {
-        // Création de la requête pour récupérer les données nécessaires
+        // Création de la requête pour récupérer les données nécessaires, y compris les informations de l'enfant
         $query = $entityManager->getRepository(User::class)->createQueryBuilder('u')
-            ->select('u.NPI', 'u.Name', 'u.Firstname', 'u.Email', 'u.Adresse', 'u.Matiere', 'd.Experience', 'd.Parcours', 't.NPI_enfant', 't.Duree_tutorat')
+            ->select('u.NPI', 'u.Name', 'u.Firstname', 'u.Email', 'u.Adresse', 'u.Matiere', 'd.Experience', 'd.Parcours', 't.NPI_enfant', 't.Duree_tutorat', 'e.Nom_enfant', 'e.Prenom_enfant', 'e.Classe_actuelle')
             ->leftJoin(Educateur::class, 'd', 'WITH', 'd.NPI = u.NPI')
             ->leftJoin(Tutorat::class, 't', 'WITH', 't.NPI_educateur = u.NPI')
+            ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI_enfant = t.NPI_enfant') // Jointure avec la table Enfant
             ->where('u.NPI = :NPI')
             ->setParameter('NPI', $NPI)
             ->getQuery();
@@ -52,9 +54,11 @@ final class GetEducateurController extends AbstractController
                 $infoEducateur[] = $educateurInfo;
             }
 
-            // Information de tutora (NPI_enfant, Duree_tutorat)
+            // Information de tutora (remplacer NPI_enfant par les infos de l'enfant)
             $infoTutorat[] = [
-                'NPI_enfant' => $detail['NPI_enfant'],
+                'Nom_enfant' => $detail['Nom_enfant'],
+                'Prenom_enfant' => $detail['Prenom_enfant'],
+                'Classe_actuelle' => $detail['Classe_actuelle'],
                 'Duree_tutorat' => $detail['Duree_tutorat']
             ];
         }
