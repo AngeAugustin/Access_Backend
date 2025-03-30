@@ -15,9 +15,9 @@ final class GetEducateurController extends AbstractController
     #[Route('/api/get_educateur/{NPI}', name: 'api_get_educateur', methods: ['GET'])]
     public function getEducateur(string $NPI, EntityManagerInterface $entityManager): JsonResponse
     {
-         // Création de la requête pour récupérer les données
+         // Création de la requête pour récupérer les données avec DISTINCT
          $query = $entityManager->getRepository(User::class)->createQueryBuilder('u')
-         ->select('u.NPI', 'u.Name', 'u.Firstname', 'u.Email', 'u.Adresse', 'u.Matiere', 'd.Experience', 'd.Parcours', 't.NPI_enfant', 't.Duree_tutorat')
+         ->select('DISTINCT u.NPI', 'u.Name', 'u.Firstname', 'u.Email', 'u.Adresse', 'u.Matiere', 'd.Experience', 'd.Parcours', 't.NPI_enfant', 't.Duree_tutorat')
          ->leftJoin(Educateur::class, 'd', 'WITH', 'd.NPI = u.NPI')
          ->leftJoin(Tutorat::class, 't', 'WITH', 't.NPI_educateur = u.NPI')
          ->where('u.NPI = :NPI')
@@ -58,3 +58,4 @@ final class GetEducateurController extends AbstractController
      ], JsonResponse::HTTP_OK);
  }
 }
+
