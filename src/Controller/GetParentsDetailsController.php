@@ -15,20 +15,27 @@ class GetParentsDetailsController extends AbstractController
     #[Route('/api/get_parents_details/{NPI}', name: 'api_get_parents_details', methods: ['GET'])]
     public function getParentsDetails(string $NPI, EntityManagerInterface $entityManager): JsonResponse
     {
-        // Création de la requête pour récupérer t
+        // Récupérer les informations du parent et des enfants
         $query = $entityManager->getRepository(User::class)->createQueryBuilder('u')
-            ->select('u.NPI', 'u.Name', 'u.Firstname', 'u.Email', 'u.Adresse', 'e.Nom_enfant', 'e.Prenom_enfant', 'e.Classe_actuelle', 't.NPI_educateur')
+            ->select('u.NPI', 'u.Name', 'u.Firstname', 'u.Email', 'u.Adresse', 'e.Nom_enfant', 'e.Prenom_enfant', 'e.Classe_actuelle')
             ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI = u.NPI')
-            ->leftJoin(Tutorat::class, 't', 'WITH', 't.NPI_parent = u.NPI')
             ->where('u.NPI = :NPI')
             ->setParameter('NPI', $NPI)
             ->getQuery();
 
-        // Exécuter la requête pour récupérer 
-        $details = $query->getResult();
+        $parentEnfantDetails = $query->getResult();
+
+        // Récupérer les NPI des éducateurs liés au parent
+        $queryEducateurs = $entityManager->getRepository(Tutorat::class)->createQueryBuilder('t')
+            ->select('t.NPI_educateur')
+            ->where('t.NPI_parent = :NPI')
+            ->setParameter('NPI', $NPI)
+            ->getQuery();
+
+        $npiEducateurs = $queryEducateurs->getResult();
 
         // Vérifier si des détails ont été trouvés
-        if (empty($details)) {
+        if (empty($parentEnfantDetails)) {
             return $this->json([
                 'message' => 'Aucun détail trouvé pour le parent avec NPI ' . $NPI,
                 'status' => JsonResponse::HTTP_NOT_FOUND
@@ -38,7 +45,10 @@ class GetParentsDetailsController extends AbstractController
         // Retourner les détails au format JSON
         return $this->json([
             'status' => JsonResponse::HTTP_OK,
-            'data' => $details
+            'data' => [
+                'parent_enfant' => $parentEnfantDetails,
+                'npi_educateurs' => array_column($npiEducateurs, 'NPI_educateur') // Récupération sous forme de liste simple
+            ]
         ], JsonResponse::HTTP_OK);
     }
 }
