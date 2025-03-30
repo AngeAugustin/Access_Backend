@@ -40,9 +40,9 @@ class GetParentsDetailsController extends AbstractController
 
         foreach ($enfants as $enfant) {
             $responseData['Enfants'][] = [
-                'NomEnfant'     => $enfant->getNomEnfant(),
-                'PrenomEnfant'  => $enfant->getPrenomEnfant(),
-                'ClasseActuelle' => $enfant->getClasseActuelle(),
+                'Nom_enfant'     => $enfant->getNomEnfant(),
+                'Prenom_enfant'  => $enfant->getPrenomEnfant(),
+                'Classe_actuelle' => $enfant->getClasseActuelle(),
             ];
         }
 
