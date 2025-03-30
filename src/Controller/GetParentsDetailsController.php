@@ -27,7 +27,7 @@ class GetParentsDetailsController extends AbstractController
         $responseData = [
             'Name'     => $user->getName(),
             'Firstname' => $user->getFirstname(),
-            'NPI'      => $user->getNpi(),
+            'NPI'      => $user->getNPI(),
             'Email'    => $user->getEmail(),
             'Adresse'  => $user->getAdresse(),
             'Enfants'  => [],
