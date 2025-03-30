@@ -15,9 +15,9 @@ final class GetEducateurController extends AbstractController
     #[Route('/api/get_educateur/{NPI}', name: 'api_get_educateur', methods: ['GET'])]
     public function getEducateur(string $NPI, EntityManagerInterface $entityManager): JsonResponse
     {
-         // Création de la requête pour récupérer les données avec DISTINCT
+         // Création de la requête pour récupérer les données
          $query = $entityManager->getRepository(User::class)->createQueryBuilder('u')
-         ->select('DISTINCT u.NPI', 'u.Name', 'u.Firstname', 'u.Email', 'u.Adresse', 'u.Matiere', 'd.Experience', 'd.Parcours', 't.NPI_enfant', 't.Duree_tutorat')
+         ->select('u.NPI', 'u.Name', 'u.Firstname', 'u.Email', 'u.Adresse', 'u.Matiere', 'd.Experience', 'd.Parcours', 't.NPI_enfant', 't.Duree_tutorat')
          ->leftJoin(Educateur::class, 'd', 'WITH', 'd.NPI = u.NPI')
          ->leftJoin(Tutorat::class, 't', 'WITH', 't.NPI_educateur = u.NPI')
          ->where('u.NPI = :NPI')
@@ -33,6 +33,21 @@ final class GetEducateurController extends AbstractController
              'message' => 'Aucun détail trouvé pour éducateur avec NPI ' . $NPI,
              'status' => JsonResponse::HTTP_NOT_FOUND
          ], JsonResponse::HTTP_NOT_FOUND);
+     }
+
+     // Créer un tableau associatif pour éviter les doublons dans les informations de l'éducateur
+     $educateurDetails = [];
+     foreach ($details as $detail) {
+         $educateurDetails[$detail['NPI']] = [
+             'NPI' => $detail['NPI'],
+             'Name' => $detail['Name'],
+             'Firstname' => $detail['Firstname'],
+             'Email' => $detail['Email'],
+             'Adresse' => $detail['Adresse'],
+             'Matiere' => $detail['Matiere'],
+             'Experience' => $detail['Experience'],
+             'Parcours' => $detail['Parcours']
+         ];
      }
 
      // Initialiser un tableau pour les données NPI_enfant et Duree_tutorat
@@ -52,7 +67,7 @@ final class GetEducateurController extends AbstractController
      return $this->json([
          'status' => JsonResponse::HTTP_OK,
          'data' => [
-             'educateur' => $details, // Informations de l'éducateur
+             'educateur' => array_values($educateurDetails), // Supprimer les doublons
              'tutorat' => $tutoratDetails // Tableau des données NPI_enfant et Duree_tutorat
          ]
      ], JsonResponse::HTTP_OK);
