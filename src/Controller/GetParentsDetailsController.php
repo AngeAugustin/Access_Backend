@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class GetParentsDetailsController extends AbstractController
 {
     #[Route('/api/get_parents_details/{NPI}', name: 'api_get_parents_details', methods: ['GET'])]
-    public function getUserInfo(string $NPI, EntityManagerInterface $entityManager): JsonResponse
+    public function getParentsDetails(string $NPI, EntityManagerInterface $entityManager): JsonResponse
     {
         // 1️⃣ Récupérer l'utilisateur par son NPI
         $userRepo = $entityManager->getRepository(User::class);
