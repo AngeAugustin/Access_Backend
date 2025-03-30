@@ -15,7 +15,7 @@ final class GetEducateurController extends AbstractController
     #[Route('/api/get_educateur/{NPI}', name: 'api_get_educateur', methods: ['GET'])]
     public function getEducateur(string $NPI, EntityManagerInterface $entityManager): JsonResponse
     {
-         // Création de la requête pour récupérer t
+         // Création de la requête pour récupérer les données
          $query = $entityManager->getRepository(User::class)->createQueryBuilder('u')
          ->select('u.NPI', 'u.Name', 'u.Firstname', 'u.Email', 'u.Adresse', 'u.Matiere', 'd.Experience', 'd.Parcours', 't.NPI_enfant', 't.Duree_tutorat')
          ->leftJoin(Educateur::class, 'd', 'WITH', 'd.NPI = u.NPI')
@@ -24,7 +24,7 @@ final class GetEducateurController extends AbstractController
          ->setParameter('NPI', $NPI)
          ->getQuery();
 
-     // Exécuter la requête pour récupérer 
+     // Exécuter la requête pour récupérer les résultats
      $details = $query->getResult();
 
      // Vérifier si des détails ont été trouvés
@@ -35,10 +35,26 @@ final class GetEducateurController extends AbstractController
          ], JsonResponse::HTTP_NOT_FOUND);
      }
 
-     // Retourner les détails au format JSON
+     // Initialiser un tableau pour les données NPI_enfant et Duree_tutorat
+     $tutoratDetails = [];
+
+     // Extraire les données NPI_enfant et Duree_tutorat dans un tableau distinct
+     foreach ($details as $detail) {
+         if (isset($detail['NPI_enfant'], $detail['Duree_tutorat'])) {
+             $tutoratDetails[] = [
+                 'NPI_enfant' => $detail['NPI_enfant'],
+                 'Duree_tutorat' => $detail['Duree_tutorat']
+             ];
+         }
+     }
+
+     // Retourner les données sous forme de JSON avec les deux ensembles
      return $this->json([
          'status' => JsonResponse::HTTP_OK,
-         'data' => $details
+         'data' => [
+             'educateur' => $details, // Informations de l'éducateur
+             'tutorat' => $tutoratDetails // Tableau des données NPI_enfant et Duree_tutorat
+         ]
      ], JsonResponse::HTTP_OK);
  }
 }
