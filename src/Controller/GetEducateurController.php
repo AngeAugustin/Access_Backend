@@ -41,12 +41,16 @@ final class GetEducateurController extends AbstractController
 
         // Parcourir les résultats et séparer les données dans les tableaux respectifs
         foreach ($details as $detail) {
-            // Information de l'éducateur (Parcours, Experience, Matiere)
-            $infoEducateur[] = [
+            // Vérifier si l'information éducateur existe déjà dans le tableau (évitons les doublons)
+            $educateurInfo = [
                 'Parcours' => $detail['Parcours'],
                 'Experience' => $detail['Experience'],
                 'Matiere' => $detail['Matiere']
             ];
+
+            if (!in_array($educateurInfo, $infoEducateur)) {
+                $infoEducateur[] = $educateurInfo;
+            }
 
             // Information de tutora (NPI_enfant, Duree_tutorat)
             $infoTutorat[] = [
