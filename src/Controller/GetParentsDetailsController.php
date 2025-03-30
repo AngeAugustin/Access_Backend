@@ -35,13 +35,11 @@ class GetParentsDetailsController extends AbstractController
             ];
         }, $enfants);
 
-        // Récupérer les éducateurs associés au parent
+        // Récupérer les éducateurs associés au parent en évitant les doublons
         $tutorats = $entityManager->getRepository(Tutorat::class)->findBy(['NPI_parent' => $NPI]);
-        $educateursData = array_map(function (Tutorat $tutorat) {
-            return [
-                'NPI_educateur' => $tutorat->getNpiEducateur(),
-            ];
-        }, $tutorats);
+        $educateursData = array_unique(array_map(function (Tutorat $tutorat) {
+            return $tutorat->getNpiEducateur();
+        }, $tutorats));
 
         // Retourner les informations sous forme JSON
         return $this->json([
@@ -55,7 +53,7 @@ class GetParentsDetailsController extends AbstractController
                     'Adresse' => $parent->getAdresse(),
                 ],
                 'enfants' => $enfantsData,
-                'educateurs' => $educateursData
+                'educateurs' => array_values($educateursData)
             ]
         ], JsonResponse::HTTP_OK);
     }
