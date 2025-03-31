@@ -30,6 +30,7 @@ final class GetProfilDetailsController extends AbstractController
             'Adresse' => $profil->getAdresse(),
             'Telephone' => $profil->getTelephone(),
             'Situation_matrimoniale' => $profil->getSituationMatrimoniale(),
+            'Statut_profil' => $profil->getStatutProfil(),
         ];
 
         return new JsonResponse($data, Response::HTTP_OK);

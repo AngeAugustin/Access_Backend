@@ -35,11 +35,11 @@ class Educateur
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Adresse_garant2 = null;
 
-    #[ORM\Column(length: 200, nullable: true)]
-    private ?string $Carte_identite = null;
+    #[ORM\Column(type: 'blob', nullable: true)]
+    private $Carte_identite = null;
 
-    #[ORM\Column(length: 200, nullable: true)]
-    private ?string $Casier_judiciaire = null;
+    #[ORM\Column(type: 'blob', nullable: true)]
+    private $Casier_judiciaire = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $Experience = null;
@@ -62,8 +62,8 @@ class Educateur
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Dispo4 = null;
 
-    #[ORM\Column(length: 200, nullable: true)]
-    private ?string $Photo_educateur = null;
+    #[ORM\Column(type: 'blob', nullable: true)]
+    private $Photo_educateur = null;
 
     public function getId(): ?int
     {
@@ -154,28 +154,24 @@ class Educateur
         return $this;
     }
 
-    public function getCarteIdentite(): ?string
+    public function getCarteIdentite()
     {
         return $this->Carte_identite;
     }
 
-    public function setCarteIdentite(string $Carte_identite): static
+    public function setCarteIdentite($Carte_identite): void
     {
         $this->Carte_identite = $Carte_identite;
-
-        return $this;
     }
 
-    public function getCasierJudiciaire(): ?string
+    public function getCasierJudiciaire()
     {
         return $this->Casier_judiciaire;
     }
 
-    public function setCasierJudiciaire(string $Casier_judiciaire): static
+    public function setCasierJudiciaire($Casier_judiciaire): void
     {
         $this->Casier_judiciaire = $Casier_judiciaire;
-
-        return $this;
     }
 
     public function getExperience(): ?string
@@ -262,15 +258,13 @@ class Educateur
         return $this;
     }
 
-    public function getPhotoEducateur(): ?string
+    public function getPhotoEducateur()
     {
         return $this->Photo_educateur;
     }
 
-    public function setPhotoEducateur(?string $Photo_educateur): static
+    public function setPhotoEducateur($Photo_educateur): void
     {
         $this->Photo_educateur = $Photo_educateur;
-
-        return $this;
     }
 }
