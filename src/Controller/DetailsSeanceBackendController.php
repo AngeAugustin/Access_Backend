@@ -25,7 +25,9 @@ final class DetailsSeanceBackendController extends AbstractController
                 'e.Prenom_enfant AS PrenomEnfant',
                 'u.Name AS NomEducateur',
                 'u.Firstname AS PrenomEducateur',
-                's.Heure_seance'
+                's.Heure_seance',
+                's.Observation',
+                's.Travail_effectue'
             )
             ->leftJoin(Enfant::class, 'e', 'WITH', 's.NPI_enfant = e.NPI_enfant')
             ->leftJoin(User::class, 'u', 'WITH', 's.NPI_educateur = u.NPI')
