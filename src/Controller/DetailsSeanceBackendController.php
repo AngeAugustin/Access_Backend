@@ -2,21 +2,22 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Seance;
 use App\Entity\Enfant;
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface; 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class GetAllSeancesController extends AbstractController
+final class DetailsSeanceBackendController extends AbstractController
 {
-    #[Route('/api/get_all_seances', name: 'api_get_all_seances', methods: ['GET'])]
-    public function getAllSeances(EntityManagerInterface $entityManager): JsonResponse
+    #[Route('/api/get_details_seance/{id}', name: 'api_get_seance', methods: ['GET'])]
+    public function getSeance(int $id, EntityManagerInterface $entityManager): JsonResponse
     {
-        // Récupération des séances avec jointures
-        $seances = $entityManager->getRepository(Seance::class)
+        // Récupération de la séance avec jointures
+        $seance = $entityManager->getRepository(Seance::class)
             ->createQueryBuilder('s')
             ->select(
                 's.Id_seance',
@@ -28,15 +29,17 @@ final class GetAllSeancesController extends AbstractController
             )
             ->leftJoin(Enfant::class, 'e', 'WITH', 's.NPI_enfant = e.NPI_enfant')
             ->leftJoin(User::class, 'u', 'WITH', 's.NPI_educateur = u.NPI')
+            ->where('s.Id_seance = :id')
+            ->setParameter('id', $id)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
 
-        // Vérification si aucune séance n'est trouvée
-        if (empty($seances)) {
-            return $this->json(['message' => 'Aucune séance trouvée'], JsonResponse::HTTP_NOT_FOUND);
+        // Vérification si la séance existe
+        if (!$seance) {
+            return $this->json(['message' => 'Séance non trouvée'], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        // Retourner les séances sous format JSON
-        return $this->json($seances, JsonResponse::HTTP_OK);
+        // Retourner la séance sous format JSON
+        return $this->json($seance, JsonResponse::HTTP_OK);
     }
 }
