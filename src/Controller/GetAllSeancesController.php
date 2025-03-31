@@ -6,22 +6,31 @@ use App\Entity\Seance;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 final class GetAllSeancesController extends AbstractController
 {
     #[Route('/api/get_all_seances', name: 'api_get_all_seances', methods: ['GET'])]
     public function getAllSeances(EntityManagerInterface $entityManager): JsonResponse
     {
-        // Récupération des seances avec une validation de la requête
+        // Création d'une requête avec jointures
         $seances = $entityManager->getRepository(Seance::class)->createQueryBuilder('s')
-            ->select('s.Id_seance, s.NPI_educateur, s.NPI_enfant, s.Heure_seance')
+            ->select(
+                's.Id_seance',
+                'educateur.Name AS educateur_nom',
+                'educateur.Firstname AS educateur_prenom',
+                'enfant.Nom_enfant',
+                'enfant.Prenom_enfant',
+                's.Heure_seance'
+            )
+            ->leftJoin('s.NPI_educateur', 'educateur')
+            ->leftJoin('s.NPI_enfant', 'enfant')
             ->getQuery()
             ->getResult();
 
-        // Si aucune séance n'est trouvé
+        // Vérification si des séances ont été trouvées
         if (empty($seances)) {
-            return $this->json(['message' => 'Aucun parent trouvé'], JsonResponse::HTTP_NOT_FOUND);
+            return $this->json(['message' => 'Aucune séance trouvée'], JsonResponse::HTTP_NOT_FOUND);
         }
 
         // Retourner les séances sous format JSON
