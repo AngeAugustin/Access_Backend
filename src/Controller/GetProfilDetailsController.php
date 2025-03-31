@@ -16,7 +16,7 @@ final class GetProfilDetailsController extends AbstractController
     {
         $query = $entityManager->createQuery(
             'SELECT u.NPI, u.Name, u.Firstname, u.Email, u.Adresse, u.Telephone, 
-                    u.Situation_matrimoniale, u.Statut_profil, 
+                    e.Situation_matrimoniale, u.Statut_profil, 
                     e.Garant_1, e.Garant_2
             FROM App\Entity\User u
             LEFT JOIN App\Entity\Educateur e WITH u.NPI = e.NPI
