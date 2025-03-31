@@ -25,6 +25,7 @@ final class DetailsSeanceBackendController extends AbstractController
                 'e.Prenom_enfant AS PrenomEnfant',
                 'u.Name AS NomEducateur',
                 'u.Firstname AS PrenomEducateur',
+                'u.Matiere AS MatiereEducateur',
                 's.Heure_seance',
                 's.Observation',
                 's.Travail_effectue',
