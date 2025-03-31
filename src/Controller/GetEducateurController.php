@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Educateur;
 use App\Entity\Tutorat;
-use App\Entity\Enfant; // Assurez-vous d'importer la classe Enfant
+use App\Entity\Enfant; 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,7 +22,7 @@ final class GetEducateurController extends AbstractController
                   't.NPI_enfant', 't.Duree_tutorat', 'e.Nom_enfant', 'e.Prenom_enfant', 'e.Classe_actuelle')
          ->leftJoin(Educateur::class, 'd', 'WITH', 'd.NPI = u.NPI')
          ->leftJoin(Tutorat::class, 't', 'WITH', 't.NPI_educateur = u.NPI')
-         ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI_enfant = t.NPI_enfant')  // Jointure avec la table Enfant
+         ->leftJoin(Enfant::class, 'e', 'WITH', 'e.NPI_enfant = t.NPI_enfant') 
          ->where('u.NPI = :NPI')
          ->setParameter('NPI', $NPI)
          ->getQuery();
