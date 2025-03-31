@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class DetailsSeanceBackendController extends AbstractController
 {
-    #[Route('/api/get_details_seance/{id}', name: 'api_get_seance', methods: ['GET'])]
+    #[Route('/api/details_seance_back/{id}', name: 'api_get_seance', methods: ['GET'])]
     public function getSeance(int $id, EntityManagerInterface $entityManager): JsonResponse
     {
         // Récupération de la séance avec jointures
