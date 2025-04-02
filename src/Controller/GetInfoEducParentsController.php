@@ -15,7 +15,7 @@ final class GetInfoEducParentsController extends AbstractController
     {
         // Création
         $query = $entityManager->getRepository(User::class)->createQueryBuilder('u')
-            ->select('u.NPI', 'u.Name', 'u.Firstname', 'u.Matiere', 'e.Etoiles', 'e.Experience', 'e.Parcours')
+            ->select('u.NPI', 'u.Name', 'u.Firstname', 'u.Matiere', 'u.Adresse', 'e.Etoiles', 'e.Experience', 'e.Parcours')
             ->leftJoin(Educateur::class, 'e', 'WITH', 'e.NPI = u.NPI')
             ->where('u.NPI = :NPI')
             ->setParameter('NPI', $NPI)
