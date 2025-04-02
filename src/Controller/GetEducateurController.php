@@ -56,6 +56,7 @@ final class GetEducateurController extends AbstractController
                 'Matiere' => $detail['Matiere'],
                 'Experience' => $detail['Experience'],
                 'Parcours' => $detail['Parcours'],
+                'Etoiles' => $detail['Etoiles'],
                 'Photo_educateur' => $photoBase64
             ];
         }
