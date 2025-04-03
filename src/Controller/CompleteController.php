@@ -56,6 +56,14 @@ public function apiComplete(Request $request, EntityManagerInterface $entityMana
         $educateur->setPhotoEducateur(file_get_contents($files['Photo_educateur']->getPathname()));
     }
 
+    if (isset($files['Diplome_academique'])) {
+        $educateur->setDiplomeAcademique(file_get_contents($files['Diplome_academique']->getPathname()));
+    }
+
+    if (isset($files['Diplome_professionnel'])) {
+        $educateur->setDiplomeProfessionnel(file_get_contents($files['Diplome_professionnel']->getPathname()));
+    }
+
     $entityManager->persist($educateur);
     $entityManager->flush();
 

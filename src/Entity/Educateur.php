@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EducateurRepository::class)]
 class Educateur
-{
+{ 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -64,6 +64,12 @@ class Educateur
 
     #[ORM\Column(type: 'blob', nullable: true)]
     private $Photo_educateur = null;
+
+    #[ORM\Column(type: 'blob', nullable: true)]
+    private $Diplome_academique = null;
+
+    #[ORM\Column(type: 'blob', nullable: true)]
+    private $Diplome_professionnel = null;
 
     public function getId(): ?int
     {
@@ -266,5 +272,25 @@ class Educateur
     public function setPhotoEducateur($Photo_educateur): void
     {
         $this->Photo_educateur = $Photo_educateur;
+    }
+
+    public function getDiplomeAcademique()
+    {
+        return $this->Diplome_academique;
+    }
+
+    public function setDiplomeAcademique($Diplome_academique): void
+    {
+        $this->Diplome_academique = $Diplome_academique;
+    }
+
+    public function getDiplomeProfessionnel()
+    {
+        return $this->Diplome_professionnel;
+    }
+
+    public function setDiplomeProfessionnel($Diplome_professionnel): void
+    {
+        $this->Diplome_professionnel = $Diplome_professionnel;
     }
 }
