@@ -18,7 +18,7 @@ final class GetProfilDetailsController extends AbstractController
             'SELECT u.NPI, u.Name, u.Firstname, u.Email, u.Adresse, u.Telephone, 
                     e.Situation_matrimoniale, u.Statut_profil, 
                     e.Garant_1, e.Garant_2, 
-                    e.Photo_educateur, e.Carte_identite, e.Casier_judiciaire
+                    e.Photo_educateur, e.Carte_identite, e.Casier_judiciaire, e.Diplome_academique, e.Diplome_professionnel
             FROM App\Entity\User u
             LEFT JOIN App\Entity\Educateur e WITH u.NPI = e.NPI
             WHERE u.NPI = :NPI'
@@ -39,6 +39,12 @@ final class GetProfilDetailsController extends AbstractController
         }
         if ($profil['Casier_judiciaire']) {
             $profil['Casier_judiciaire'] = base64_encode(stream_get_contents($profil['Casier_judiciaire']));
+        }
+        if ($profil['Diplome_academique']) {
+            $profil['Diplome_academique'] = base64_encode(stream_get_contents($profil['Diplome_academique']));
+        }
+        if ($profil['Diplome_professionnel']) {
+            $profil['Diplome_professionnel'] = base64_encode(stream_get_contents($profil['Diplome_professionnel']));
         }
 
         return new JsonResponse($profil, Response::HTTP_OK);
