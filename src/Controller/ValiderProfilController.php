@@ -16,38 +16,35 @@ final class ValiderProfilController extends AbstractController
     #[Route('/api/valider/{NPI}', name: 'api_valider', methods: ['PUT'])]
     public function valid(string $NPI, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        // Trouver l'utilisateur par son NPI
-        $user = $entityManager->getRepository(User::class)->findOneBy(['NPI' => $NPI]);
-
-        if (!$user) {
-            return new JsonResponse(['error' => 'Utilisateur non trouvé'], Response::HTTP_NOT_FOUND);
-        }
-
-        // Récupérer les données JSON de la requête
+        // Récupérer les données JSON
         $data = json_decode($request->getContent(), true);
 
         if (!isset($data['etoiles'], $data['niveau'])) {
             return new JsonResponse(['error' => 'Champs etoiles et niveau requis'], Response::HTTP_BAD_REQUEST);
         }
 
-        // Mise à jour du statut du profil
-        $user->setStatutProfil('Vérifié');
-
-        // Accès à l'entité Educateur liée
-        $educateur = $user->getEducateur();
-
-        if (!$educateur instanceof Educateur) {
-            return new JsonResponse(['error' => 'Educateur non associé à cet utilisateur'], Response::HTTP_NOT_FOUND);
+        // Trouver l'utilisateur
+        $user = $entityManager->getRepository(User::class)->findOneBy(['NPI' => $NPI]);
+        if (!$user) {
+            return new JsonResponse(['error' => 'Utilisateur non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
-        // Mise à jour des attributs de l’éducateur
+        // Trouver l'éducateur
+        $educateur = $entityManager->getRepository(Educateur::class)->findOneBy(['NPI' => $NPI]);
+        if (!$educateur) {
+            return new JsonResponse(['error' => 'Éducateur non trouvé'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Mise à jour
+        $user->setStatutProfil('Vérifié');
         $educateur->setEtoiles($data['etoiles']);
         $educateur->setNiveau($data['niveau']);
 
-        $entityManager->persist($educateur);
+        // Enregistrement
         $entityManager->persist($user);
+        $entityManager->persist($educateur);
         $entityManager->flush();
 
-        return new JsonResponse(['message' => 'Profil validé et informations mises à jour'], Response::HTTP_OK);
+        return new JsonResponse(['message' => 'Profil validé et éducateur mis à jour'], Response::HTTP_OK);
     }
 }
