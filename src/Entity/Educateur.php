@@ -71,6 +71,9 @@ class Educateur
     #[ORM\Column(type: 'blob', nullable: true)]
     private $Diplome_professionnel = null;
 
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Niveau = null;
+
     public function getId(): ?int
     {
         return $this->Id;
@@ -292,5 +295,17 @@ class Educateur
     public function setDiplomeProfessionnel($Diplome_professionnel): void
     {
         $this->Diplome_professionnel = $Diplome_professionnel;
+    }
+
+    public function getNiveau(): ?string
+    {
+        return $this->Niveau;
+    }
+
+    public function setNiveau(?string $Niveau): static
+    {
+        $this->Niveau = $Niveau;
+
+        return $this;
     }
 }
