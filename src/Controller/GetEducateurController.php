@@ -19,7 +19,7 @@ final class GetEducateurController extends AbstractController
         // Création de la requête pour récupérer les données
         $query = $entityManager->getRepository(User::class)->createQueryBuilder('u')
             ->select('u.NPI', 'u.Name', 'u.Firstname', 'u.Email', 'u.Adresse', 'u.Matiere', 
-                     'd.Experience', 'd.Parcours', 'd.Photo_educateur', 'd.Etoiles', 
+                     'd.Experience', 'd.Parcours', 'd.Photo_educateur', 'd.Etoiles', 'd.Niveau',
                      't.NPI_enfant', 't.Duree_tutorat', 
                      'e.Nom_enfant', 'e.Prenom_enfant', 'e.Classe_actuelle')
             ->leftJoin(Educateur::class, 'd', 'WITH', 'd.NPI = u.NPI')
