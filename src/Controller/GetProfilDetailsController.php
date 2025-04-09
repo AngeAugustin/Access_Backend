@@ -36,7 +36,7 @@ final class GetProfilDetailsController extends AbstractController
         }
         if ($profil['Carte_identite']) {
             $profil['Carte_identite'] = base64_encode(stream_get_contents($profil['Carte_identite']));
-        }
+        } 
         if ($profil['Casier_judiciaire']) {
             $profil['Casier_judiciaire'] = base64_encode(stream_get_contents($profil['Casier_judiciaire']));
         }
