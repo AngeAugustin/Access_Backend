@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\Educateur; // Assure-toi d'importer l'entité Educateur
+use App\Entity\Educateur; 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -40,7 +40,7 @@ final class ProfilController extends AbstractController
 
         // Préparer les données à retourner
         $data = [
-            'Telephone' => $user->getTelephone(),
+            'Telephone' => $user->getTelephone(), 
             'Adresse' => $user->getAdresse(),
             'Statut_profil' => $user->getStatutProfil(),
             'Matiere' => $matiere, // La matière est simplement un attribut de User
