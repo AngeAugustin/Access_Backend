@@ -27,7 +27,7 @@ final class GetInfoEducParentsController extends AbstractController
         // Vérifier 
         if (empty($infos)) {
             return $this->json([
-                'message' => 'Aucun INFOS trouvé t ' . $NPI,
+                'message' => 'Aucune info trouvée ' . $NPI,
                 'status' => JsonResponse::HTTP_NOT_FOUND
             ], JsonResponse::HTTP_NOT_FOUND);
         }
