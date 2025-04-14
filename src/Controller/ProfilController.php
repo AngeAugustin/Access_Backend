@@ -48,6 +48,9 @@ final class ProfilController extends AbstractController
             'Niveau' => $educateur->getNiveau(), // Ajouter le niveau de l'éducateur
             'Experience' => $educateur->getExperience(),
             'Parcours' => $educateur->getParcours(),
+            'Name' => $user->getName(),
+            'Firstname' => $user->getFirstname(),
+            'Etoiles' => $educateur->getEtoiles(),
         ];
 
         return new JsonResponse($data, Response::HTTP_OK);
