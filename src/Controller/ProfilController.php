@@ -46,6 +46,8 @@ final class ProfilController extends AbstractController
             'Matiere' => $matiere, // La matière est simplement un attribut de User
             'Photo_educateur' => $photoEducateurBase64, // Photo convertie en Base64
             'Niveau' => $educateur->getNiveau(), // Ajouter le niveau de l'éducateur
+            'Experience' => $educateur->getExperience(),
+            'Parcours' => $educateur->getParcours(),
         ];
 
         return new JsonResponse($data, Response::HTTP_OK);
