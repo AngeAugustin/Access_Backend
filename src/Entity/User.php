@@ -61,6 +61,9 @@ class User
     #[ORM\Column(nullable: true)]
     private ?int $Nombre_enfants = null;
 
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Code_secret = null;
+
     public function getNPI(): ?string
     {
         return $this->NPI;
@@ -273,6 +276,18 @@ class User
     public function setNombreEnfants(?int $Nombre_enfants): static
     {
         $this->Nombre_enfants = $Nombre_enfants;
+
+        return $this;
+    }
+
+    public function getCodeSecret(): ?string
+    {
+        return $this->Code_secret;
+    }
+
+    public function setCodeSecret(?string $Code_secret): static
+    {
+        $this->Code_secret = $Code_secret;
 
         return $this;
     }
