@@ -26,7 +26,7 @@ class PasswordResetController extends AbstractController
         $NPI = $data['NPI'] ?? null;
 
         if (!$Email || !$NPI) {
-            return $this->json(['error' => 'Email and NPI are required.'], 400);
+            return $this->json(['error' => 'Email et NPI sont requis.'], 400);
         }
 
         $user = $em->getRepository(User::class)->findOneBy([
@@ -35,7 +35,7 @@ class PasswordResetController extends AbstractController
         ]);
 
         if (!$user) {
-            return $this->json(['error' => 'User not found.'], 404);
+            return $this->json(['error' => 'Utilisateur non trouvé'], 404);
         }
 
         // Génère un nouveau code secret aléatoire
