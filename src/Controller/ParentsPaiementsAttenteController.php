@@ -14,7 +14,8 @@ class ParentsPaiementsAttenteController extends AbstractController
     public function paiementsAttente(string $NPI_parent, EntityManagerInterface $entityManager): JsonResponse
     {
         $today = new \DateTime();
-        $results = [];
+        $enAttente = [];
+        $effectues = [];
 
         $paiements = $entityManager->getRepository(Paiement::class)->findBy([
             'NPI_parent' => $NPI_parent
@@ -29,12 +30,24 @@ class ParentsPaiementsAttenteController extends AbstractController
                 $date = $paiement->$getDate();
                 $statut = $paiement->$getStatut();
 
-                if ($date instanceof \DateTimeInterface && $statut === 'En attente') {
-                    $interval = $today->diff($date);
-                    $daysDiff = (int) $interval->format('%r%a'); // %r to keep sign
+                if ($date instanceof \DateTimeInterface) {
+                    // Paiement en attente, dans 5 jours ou moins
+                    if ($statut === 'En attente') {
+                        $interval = $today->diff($date);
+                        $daysDiff = (int) $interval->format('%r%a');
+                        if ($daysDiff >= 0 && $daysDiff <= 5) {
+                            $enAttente[] = [
+                                'NPI_educateur' => $paiement->getNPIEducateur(),
+                                'Montant_paiement' => $paiement->$getMontant(),
+                                'Statut_paiement' => $paiement->$getStatut(),
+                                'Date_paiement' => $date->format('Y-m-d'),
+                            ];
+                        }
+                    }
 
-                    if ($daysDiff >= 0 && $daysDiff <= 5) {
-                        $results[] = [
+                    // Paiement effectué, sans contrainte de date
+                    if ($statut === 'Effectué') {
+                        $effectues[] = [
                             'NPI_educateur' => $paiement->getNPIEducateur(),
                             'Montant_paiement' => $paiement->$getMontant(),
                             'Date_paiement' => $date->format('Y-m-d'),
@@ -44,6 +57,9 @@ class ParentsPaiementsAttenteController extends AbstractController
             }
         }
 
-        return new JsonResponse($results);
+        return new JsonResponse([
+            'en_attente' => $enAttente,
+            'effectues' => $effectues
+        ]);
     }
 }
