@@ -59,6 +59,7 @@ class ParentsPaiementsAttenteController extends AbstractController
                         $effectues[] = [
                             'Nom_educateur' => $educateurNom,
                             'Prenom_educateur' => $educateurPrenom,
+                            'Statut_paiement' => $statut,
                             'Montant_paiement' => $paiement->$getMontant(),
                             'Date_paiement' => $date->format('Y-m-d'),
                         ];
