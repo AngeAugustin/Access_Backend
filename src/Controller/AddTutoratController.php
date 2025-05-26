@@ -50,7 +50,21 @@ final class AddTutoratController extends AbstractController
         $tutorat->setSeance1($data['Seance1']);
         $tutorat->setSeance2($data['Seance2']);
         $tutorat->setStatutTutorat('En cours');
+        
         $tutorat->setDateTutorat(new \DateTime());
+        $dateDebut = new \DateTime(); // Assure que c'est bien un objet DateTime
+        $duree = $tutorat->getDureeTutorat();    // en semaines
+
+        // Calcul de la date de fin (durée en semaines → jours = semaines * 7)
+        $dateFin = (clone $dateDebut)->modify("+{$duree} weeks");
+        $tutorat->setDateFinTutorat($dateFin);
+
+        // Vérifie si la date de fin est aujourd’hui (ou antérieure)
+        $today = new \DateTime();
+        if ($today->format('Y-m-d') >= $dateFin->format('Y-m-d')) {
+            $tutorat->setStatutTutorat('Terminé');
+        }
+
 
         $entityManager->persist($tutorat);
         $entityManager->flush();

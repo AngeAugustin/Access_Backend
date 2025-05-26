@@ -40,6 +40,9 @@ class Tutorat
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Observation_generale = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $Date_fin_tutorat = null;
+
     public function getReferenceTutorat(): ?string
     {
         return $this->Reference_tutorat;
@@ -156,6 +159,18 @@ class Tutorat
     public function setObservationGenerale(?string $Observation_generale): static
     {
         $this->Observation_generale = $Observation_generale;
+
+        return $this;
+    }
+
+    public function getDateFinTutorat(): ?\DateTimeInterface
+    {
+        return $this->Date_fin_tutorat;
+    }
+
+    public function setDateFinTutorat(?\DateTimeInterface $Date_fin_tutorat): static
+    {
+        $this->Date_fin_tutorat = $Date_fin_tutorat;
 
         return $this;
     }
