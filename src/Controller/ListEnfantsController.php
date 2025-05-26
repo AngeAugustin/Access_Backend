@@ -28,6 +28,7 @@ final class ListEnfantsController extends AbstractController
                 'NPI_enfant' => $enfant->getNPIEnfant(),
                 'Nom_enfant' => $enfant->getNomEnfant(),
                 'Prenom_enfant' => $enfant->getPrenomEnfant(),
+                'Classe_actuelle' => $enfant->getClasseActuelle(),
             ];
         }, $enfants);
 
