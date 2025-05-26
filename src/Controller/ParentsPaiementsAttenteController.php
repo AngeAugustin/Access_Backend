@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Paiement;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,24 +32,33 @@ class ParentsPaiementsAttenteController extends AbstractController
                 $statut = $paiement->$getStatut();
 
                 if ($date instanceof \DateTimeInterface) {
-                    // Paiement en attente, dans 5 jours ou moins
+                    // Récupération de l'utilisateur éducateur
+                    $educateur = $entityManager->getRepository(User::class)->find($paiement->getNPIEducateur());
+
+                    // Si l'éducateur existe, on extrait les infos
+                    $educateurNom = $educateur ? $educateur->getName() : 'Inconnu';
+                    $educateurPrenom = $educateur ? $educateur->getFirstname() : 'Inconnu';
+
+                    // Paiement en attente dans 5 jours ou moins
                     if ($statut === 'En attente') {
                         $interval = $today->diff($date);
                         $daysDiff = (int) $interval->format('%r%a');
                         if ($daysDiff >= 0 && $daysDiff <= 5) {
                             $enAttente[] = [
-                                'NPI_educateur' => $paiement->getNPIEducateur(),
+                                'Nom_educateur' => $educateurNom,
+                                'Prenom_educateur' => $educateurPrenom,
                                 'Montant_paiement' => $paiement->$getMontant(),
-                                'Statut_paiement' => $paiement->$getStatut(),
+                                'Statut_paiement' => $statut,
                                 'Date_paiement' => $date->format('Y-m-d'),
                             ];
                         }
                     }
 
-                    // Paiement effectué, sans contrainte de date
+                    // Paiement effectué
                     if ($statut === 'Effectué') {
                         $effectues[] = [
-                            'NPI_educateur' => $paiement->getNPIEducateur(),
+                            'Nom_educateur' => $educateurNom,
+                            'Prenom_educateur' => $educateurPrenom,
                             'Montant_paiement' => $paiement->$getMontant(),
                             'Date_paiement' => $date->format('Y-m-d'),
                         ];
