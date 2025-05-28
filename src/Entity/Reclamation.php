@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ReclamationRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReclamationRepository::class)]
@@ -38,6 +39,12 @@ class Reclamation
 
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Role_demandant = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $Date_demande = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $Date_traitement = null;
 
     public function getIdReclamation(): ?string
     {
@@ -153,6 +160,30 @@ class Reclamation
     public function setRoleDemandant(?string $Role_demandant): static
     {
         $this->Role_demandant = $Role_demandant;
+
+        return $this;
+    }
+
+    public function getDateDemande(): ?\DateTimeInterface
+    {
+        return $this->Date_demande;
+    }
+
+    public function setDateDemande(?\DateTimeInterface $Date_demande): static
+    {
+        $this->Date_demande = $Date_demande;
+
+        return $this;
+    }
+
+    public function getDateTraitement(): ?\DateTimeInterface
+    {
+        return $this->Date_traitement;
+    }
+
+    public function setDateTraitement(?\DateTimeInterface $Date_traitement): static
+    {
+        $this->Date_traitement = $Date_traitement;
 
         return $this;
     }

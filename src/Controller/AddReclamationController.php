@@ -31,6 +31,7 @@ class AddReclamationController extends AbstractController
         $reclamation->setNomDemandant($data['Nom_demandant']);
         $reclamation->setPrenomDemandant($data['Prenom_demandant']);
         $reclamation->setRoleDemandant($data['Role_demandant']);
+        $reclamation->setDateDemande(new \DateTime());
 
         $em->persist($reclamation);
         $em->flush();
