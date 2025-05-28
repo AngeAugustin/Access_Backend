@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AddReclamationController extends AbstractController
@@ -16,35 +17,24 @@ class AddReclamationController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        if (
-            !isset($data['NPI_demandant']) ||
-            !isset($data['Motif']) ||
-            !isset($data['Details']) ||
-            !isset($data['Mail_demandant'])||
-            !isset($data['Nom_demandant'])||
-            !isset($data['Prenom_demandant'])||
-            !isset($data['Role_demandant'])
-        ) {
-            return new JsonResponse(['error' => 'Données incomplètes'], 400);
+         if ($data === null) {
+            return new JsonResponse(['error' => 'Invalid JSON format'], Response::HTTP_BAD_REQUEST);
         }
 
-        // Génération ID aléatoire à 10 chiffres
-        $id = random_int(1000000000, 9999999999);
-
         $reclamation = new Reclamation();
-        $reclamation->setIdReclamation($id)
-            ->setNPIDemandant($data['NPI_demandant'])
-            ->setMotif($data['Motif'])
-            ->setDetails($data['Details'])
-            ->setStatut('Nouveau')
-            ->setMailDemandant($data['Mail_demandant'])
-            ->setNomDemandant($data['Nom_demandant'])
-            ->setPrenomDemandant($data['Prenom_demandant'])
-            ->setRoleDemandant($data['Role_demandant']);
+        $reclamation->setIdReclamation($data['Id_reclamation']); 
+        $reclamation->setNPIDemandant($data['NPI_demandant']);
+        $reclamation->setMotif($data['Motif']);
+        $reclamation->setDetails($data['Details']);
+        $reclamation->setStatut('Nouveau');
+        $reclamation->setMailDemandant($data['Mail_demandant']);
+        $reclamation->setNomDemandant($data['Nom_demandant']);
+        $reclamation->setPrenomDemandant($data['Prenom_demandant']);
+        $reclamation->setRoleDemandant($data['Role_demandant']);
 
         $em->persist($reclamation);
         $em->flush();
 
-        return new JsonResponse(['message' => 'Réclamation créée avec succès', 'id' => $id], 201);
+        return new JsonResponse(['message' => 'Réclamation créée avec succès', 'id' => $data['Id_reclamation']], 201);
     }
 }
