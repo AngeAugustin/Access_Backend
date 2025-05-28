@@ -20,7 +20,7 @@ class Seance
     private ?\DateTimeInterface $Date_seance = null;
 
     #[ORM\Column(length: 200, nullable: true)]
-    private ?string $Heure_seance = null;
+    private ?string $Heure_seance = null; 
 
     #[ORM\Column(length: 240, nullable: true)]
     private ?string $Observation = null;

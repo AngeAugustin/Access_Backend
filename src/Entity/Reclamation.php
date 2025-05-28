@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Reclamation
 {
     #[ORM\Id]
-    #[ORM\Column]
-    private ?int $Id_reclamation = null;
+    #[ORM\Column(length: 20)]
+    private ?string $Id_reclamation = null;
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $NPI_demandant = null;
@@ -39,11 +39,11 @@ class Reclamation
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Role_demandant = null;
 
-    public function getIdReclamation(): ?int
+    public function getIdReclamation(): ?string
     {
         return $this->Id_reclamation;
     }
-    public function setIdReclamation(int $Id_reclamation): static
+    public function setIdReclamation(string $Id_reclamation): static
     {
         $this->Id_reclamation = $Id_reclamation;
         return $this;
