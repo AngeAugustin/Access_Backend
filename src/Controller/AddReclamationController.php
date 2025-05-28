@@ -35,6 +35,6 @@ class AddReclamationController extends AbstractController
         $em->persist($reclamation);
         $em->flush();
 
-        return new JsonResponse(['message' => 'Réclamation créée avec succès', 'id' => $data['Id_reclamation']], 201);
+        return new JsonResponse(['message' => 'Réclamation créée avec succès', 'id' => $reclamation->getIdReclamation()]);
     }
 }
