@@ -57,8 +57,8 @@ class ParentsPaiementsAttenteController extends AbstractController
                         }
                     }
 
-                    // Paiement effectué
-                    if ($statut === 'Effectué') {
+                    // Paiement effectué (Mais dans ce contexte provisoire)
+                    if ($statut === 'Provisoire') {
                         $effectues[] = [
                             'Id_paiement' => $paiement->getIdPaiement(),
                             'Nom_educateur' => $educateurNom,
