@@ -79,48 +79,48 @@ class PaiementAdmin
         return $this;
     }
 
-    public function getNPIPayeur(): ?string
+    public function getNPIAgent(): ?string
     {
         return $this->NPI_agent;
     }
 
-    public function setNPIPayeur(?string $NPI_agent): static
+    public function setNPIAgent(?string $NPI_agent): static
     {
         $this->NPI_agent = $NPI_agent;
 
         return $this;
     }
 
-    public function getNomPayeur(): ?string
+    public function getNomAgent(): ?string
     {
         return $this->Nom_agent;
     }
 
-    public function setNomPayeur(?string $Nom_agent): static
+    public function setNomAgent(?string $Nom_agent): static
     {
         $this->Nom_agent = $Nom_agent;
 
         return $this;
     }
 
-    public function getPrenomPayeur(): ?string
+    public function getPrenomAgent(): ?string
     {
         return $this->Prenom_agent;
     }
 
-    public function setPrenomPayeur(?string $Prenom_agent): static
+    public function setPrenomAgent(?string $Prenom_agent): static
     {
         $this->Prenom_agent = $Prenom_agent;
 
         return $this;
     }
 
-    public function getRolePayeur(): ?string
+    public function getRoleAgent(): ?string
     {
         return $this->Role_agent;
     }
 
-    public function setRolePayeur(?string $Role_agent): static
+    public function setRoleAgent(?string $Role_agent): static
     {
         $this->Role_agent = $Role_agent;
 
