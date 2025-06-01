@@ -32,6 +32,7 @@ class EducateursPaiementsController extends AbstractController
                 $getDate = 'getDatePaiement' . $i;
                 $getStatut = 'getStatutPaiement' . $i;
                 $getMontant = 'getMontantPaiement' . $i;
+                $getPaiement = 'getPaiement' . $i;
 
                 $date = $paiement->$getDate();
                 $statut = $paiement->$getStatut();
@@ -43,7 +44,8 @@ class EducateursPaiementsController extends AbstractController
                         'Parent_prenom' => $prenom,
                         'Montant_paiement' => $paiement->$getMontant(),
                         'Statut_paiement' => $statut,
-                        'Date_paiement' => $date->format('Y-m-d')
+                        'Date_paiement' => $date->format('Y-m-d'),
+                        'Paiement' => $paiement->$getPaiement(),
                     ];
                 }
             }
