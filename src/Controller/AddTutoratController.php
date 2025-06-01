@@ -8,15 +8,16 @@ use App\Entity\Tarif;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request; 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\ByteString;
 
-final class AddTutoratController extends AbstractController  
+final class AddTutoratController extends AbstractController
 {
     #[Route('/api/add_tutorat', name: 'api_add_tutorat', methods: ['POST'])]
     public function apiAddTutorat(Request $request, EntityManagerInterface $entityManager): JsonResponse
-    {  
+    {
         $data = json_decode($request->getContent(), true);
 
         if ($data === null) {
@@ -50,21 +51,19 @@ final class AddTutoratController extends AbstractController
         $tutorat->setSeance1($data['Seance1']);
         $tutorat->setSeance2($data['Seance2']);
         $tutorat->setStatutTutorat('En cours');
-        
-        $tutorat->setDateTutorat(new \DateTime());
-        $dateDebut = new \DateTime(); // Assure que c'est bien un objet DateTime
-        $duree = $tutorat->getDureeTutorat();    // en semaines
 
-        // Calcul de la date de fin (durée en semaines → jours = semaines * 7)
+        $tutorat->setDateTutorat(new \DateTime());
+        $dateDebut = new \DateTime();
+        $duree = $tutorat->getDureeTutorat(); // en semaines
+
+        // Calcul de la date de fin
         $dateFin = (clone $dateDebut)->modify("+{$duree} weeks");
         $tutorat->setDateFinTutorat($dateFin);
 
-        // Vérifie si la date de fin est aujourd’hui (ou antérieure)
         $today = new \DateTime();
         if ($today->format('Y-m-d') >= $dateFin->format('Y-m-d')) {
             $tutorat->setStatutTutorat('Terminé');
         }
-
 
         $entityManager->persist($tutorat);
         $entityManager->flush();
@@ -94,7 +93,7 @@ final class AddTutoratController extends AbstractController
             $paiement->setMontantPaiement1($montant);
             $paiement->setStatutPaiement1($statut);
             $paiement->setDatePaiement1((clone $dateBase)->modify('+1 month'));
-
+            $paiement->setPaiement1(ByteString::fromRandom(8)->toString());
         } else {
             $nbrePaiements = intval(ceil($Duree_tutorat / 4));
             $paiement->setNbrePaiements($nbrePaiements);
@@ -103,14 +102,22 @@ final class AddTutoratController extends AbstractController
             $currentDate = clone $dateBase;
             for ($i = 1; $i <= $nbrePaiements; $i++) {
                 $currentDate->modify('+1 month');
+
                 $setterMontant = 'setMontantPaiement' . $i;
                 $setterStatut = 'setStatutPaiement' . $i;
-                $setterDate   = 'setDatePaiement' . $i;
+                $setterDate = 'setDatePaiement' . $i;
+                $setterPaiement = 'setPaiement' . $i;
 
-                if (method_exists($paiement, $setterMontant) && method_exists($paiement, $setterStatut) && method_exists($paiement, $setterDate)) {
+                if (
+                    method_exists($paiement, $setterMontant) &&
+                    method_exists($paiement, $setterStatut) &&
+                    method_exists($paiement, $setterDate) &&
+                    method_exists($paiement, $setterPaiement)
+                ) {
                     $paiement->$setterMontant($montant);
                     $paiement->$setterStatut($statut);
                     $paiement->$setterDate(clone $currentDate);
+                    $paiement->$setterPaiement(ByteString::fromRandom(8)->toString());
                 }
             }
         }
