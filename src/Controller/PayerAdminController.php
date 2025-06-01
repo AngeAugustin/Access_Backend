@@ -47,7 +47,7 @@ class PayerAdminController extends AbstractController
             $setDate = 'setDatePaiement' . $i;
 
             if ($paiement->$getPaiement() === $Paiement) {
-                $paiement->$setStatut('Provisoire');
+                $paiement->$setStatut('Effectué');
                 $paiement->$setDate($today);
                 $updated = true;
                 break;
