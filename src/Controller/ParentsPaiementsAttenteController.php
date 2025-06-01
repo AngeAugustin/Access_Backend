@@ -46,6 +46,7 @@ class ParentsPaiementsAttenteController extends AbstractController
                         $daysDiff = (int) $interval->format('%r%a');
                         if ($daysDiff >= 0 && $daysDiff <= 5) {
                             $enAttente[] = [
+                                'Id_paiement' => $paiement->getIdPaiement(),
                                 'Nom_educateur' => $educateurNom,
                                 'Prenom_educateur' => $educateurPrenom,
                                 'Montant_paiement' => $paiement->$getMontant(),
@@ -59,6 +60,7 @@ class ParentsPaiementsAttenteController extends AbstractController
                     // Paiement effectué
                     if ($statut === 'Effectué') {
                         $effectues[] = [
+                            'Id_paiement' => $paiement->getIdPaiement(),
                             'Nom_educateur' => $educateurNom,
                             'Prenom_educateur' => $educateurPrenom,
                             'Statut_paiement' => $statut,
