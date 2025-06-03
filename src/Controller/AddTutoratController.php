@@ -131,3 +131,11 @@ final class AddTutoratController extends AbstractController
         ]);
     }
 }
+
+// Forign key sql syntax
+/* ALTER TABLE paiement
+ADD CONSTRAINT fk_reference_tutorat FOREIGN KEY (Reference_tutorat)
+REFERENCES tutorat (Reference_tutorat)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+ */
