@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Paiement
 {
     #[ORM\Id]
-    #[ORM\Column]
-    private ?int $Id_paiement = null;
+    #[ORM\Column(length: 20)]
+    private ?string $Id_paiement = null; 
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $Reference_tutorat = null;
@@ -73,12 +73,12 @@ class Paiement
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Paiement3 = null;
 
-    public function getIdPaiement(): ?int
+    public function getIdPaiement(): ?string
     {
         return $this->Id_paiement;
     }
 
-    public function setIdPaiement(int $Id_paiement): static
+    public function setIdPaiement(string $Id_paiement): static
     {
         $this->Id_paiement = $Id_paiement;
         return $this;
