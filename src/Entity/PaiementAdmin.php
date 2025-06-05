@@ -33,6 +33,9 @@ class PaiementAdmin
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Role_agent = null;
 
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Id_transaction = null;
+
     public function getIdPaiement(): ?string
     {
         return $this->Id_paiement;
@@ -123,6 +126,18 @@ class PaiementAdmin
     public function setRoleAgent(?string $Role_agent): static
     {
         $this->Role_agent = $Role_agent;
+
+        return $this;
+    }
+
+    public function getIdTransaction(): ?string
+    {
+        return $this->Id_transaction;
+    }
+
+    public function setIdTransaction(?string $Id_transaction): static
+    {
+        $this->Id_transaction = $Id_transaction;
 
         return $this;
     }

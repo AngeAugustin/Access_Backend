@@ -23,6 +23,7 @@ class PayerAdminController extends AbstractController
         }
 
         $Id_paiement = $data['Id_paiement'];
+        $Id_transaction = $data['Id_transaction'];
         $Paiement = $data['Paiement'];
         $NPI_agent = $data['NPI_agent'];
         $Nom_agent = $data['Nom_agent'];
@@ -63,6 +64,7 @@ class PayerAdminController extends AbstractController
         // Création enregistrement PaiementAdmin
         $paiementAdmin = new PaiementAdmin();
         $paiementAdmin->setIdPaiement($Paiement);
+        $paiementAdmin->setIdTransaction($Id_transaction);
         $paiementAdmin->setNPIAgent($NPI_agent);
         $paiementAdmin->setNomAgent($Nom_agent);
         $paiementAdmin->setPrenomAgent($Prenom_agent);
