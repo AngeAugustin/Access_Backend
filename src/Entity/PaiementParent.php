@@ -36,6 +36,9 @@ class PaiementParent
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Id_transaction = null;
 
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Email_payeur = null;
+
     public function getIdPaiement(): ?string
     {
         return $this->Id_paiement;
@@ -138,6 +141,18 @@ class PaiementParent
     public function setIdTransaction(?string $Id_transaction): static
     {
         $this->Id_transaction = $Id_transaction;
+
+        return $this;
+    }
+
+    public function getEmailPayeur(): ?string
+    {
+        return $this->Email_payeur;
+    }
+
+    public function setEmailPayeur(?string $Email_payeur): static
+    {
+        $this->Email_payeur = $Email_payeur;
 
         return $this;
     }
