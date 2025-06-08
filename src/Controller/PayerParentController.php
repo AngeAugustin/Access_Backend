@@ -13,8 +13,85 @@ use Symfony\Component\Routing\Annotation\Route;
 class PayerParentController extends AbstractController
 {
     #[Route('/api/payer_parent', name: 'payer_parent', methods: ['POST'])]
-    public function payerParent(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    public function payerParent(Request $request, EntityManagerInterface $entityManager, \Psr\Log\LoggerInterface $logger): JsonResponse
     {
+        
+        /* Adding webhook */ 
+        $endpoint_secret = 'wh_sandbox_6iiscCZ20nlJHlyclHRdGkbA';
+        $payload = @file_get_contents('php://input');
+        $sig_header = $_SERVER['HTTP_X_FEDAPAY_SIGNATURE'];
+        $event = null;
+
+        try {
+            $event = \FedaPay\Webhook::constructEvent(
+                $payload, $sig_header, $endpoint_secret
+            );
+        } catch(\UnexpectedValueException $e) {
+            // Invalid payload
+            http_response_code(400);
+            exit();
+        } catch(\FedaPay\Error\SignatureVerification $e) {
+            // Invalid signature
+            http_response_code(400);
+            exit();
+        }
+        
+        //Show info to
+        $data = json_decode($payload)->entity->custom_metadata;
+        $transac_id = $request->get('entity')['id'];
+
+        // Log the event for debugging
+        $logger->info('FedaPay Webhook Event', [
+            'event' => $event->name,
+            'data' => $data,
+            'transaction_id' => $transac_id
+        ]);
+
+        die;
+
+        // Handle the event
+        switch ($event->name) {
+            case 'transaction.created':
+                // Transaction créée
+                break;
+            case 'transaction.approved':
+                
+                /* Handle true operation */
+                $campaign = $data->campaign_id;
+                $number = $data->number_of_votes;
+                $cost = $data->amount;
+                $infos = $data->phone_number;
+
+                $vote = 1;
+
+                //Review
+                if(!$vote)
+                {
+                    if(!$vote)
+                    {
+                        echo json_encode(['status' => false, 'message' => 'Une erreur est intervenue']);
+                        http_response_code(200);
+                        exit;
+                    }else{
+                        echo json_encode(['status' => true, 'message' => 'Enregistrement effectif']);
+                        http_response_code(200);
+                        exit;
+                        
+                    }
+                }
+                // Transaction approuvée
+                break;
+            case 'transaction.canceled':
+                // Transaction annulée
+                break;
+            default:
+                http_response_code(400);
+                exit();
+        }
+
+        http_response_code(200);
+    
+        
         $data = json_decode($request->getContent(), true);
 
         if (!$data
