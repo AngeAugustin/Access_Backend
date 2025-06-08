@@ -37,7 +37,7 @@ class PayerParentController extends AbstractController
         }
         
         //Show info to
-        $data = json_decode($payload);
+        $data = json_decode($payload)->entity->custom_metadata;
         // $transac_id = $request->get('entity')['id'];
 
         // Log the event for debugging
