@@ -38,13 +38,13 @@ class PayerParentController extends AbstractController
         
         //Show info to
         $data = json_decode($payload)->entity->custom_metadata;
-        // $transac_id = $request->get('entity')['id'];
+        $transac_id = json_decode($payload)->entity->id;
 
         // Log the event for debugging
         $logger->info('FedaPay Webhook Event', [
             'event' => $event->name,
             'data' => $data,
-            // 'transaction_id' => $transac_id
+            'transaction_id' => $transac_id
         ]);
 
         die;
