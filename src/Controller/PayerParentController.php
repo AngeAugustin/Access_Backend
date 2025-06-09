@@ -53,7 +53,6 @@ class PayerParentController extends AbstractController
                 // Transaction créée
                 break;
             case 'transaction.approved':
-
                 $Id_paiement = $data->Id_paiement;
                 $Id_transaction = $transac_id;
                 $Paiement = $data->Paiement;
