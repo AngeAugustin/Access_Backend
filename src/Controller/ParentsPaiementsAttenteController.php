@@ -57,8 +57,8 @@ class ParentsPaiementsAttenteController extends AbstractController
                         }
                     }
 
-                    // Paiement effectué (Mais dans ce contexte provisoire)
-                    if ($statut === 'Provisoire') {
+                    // Paiements avec statut Provisoire ou Effectué
+                    if (in_array($statut, ['Provisoire', 'Effectué'])) {
                         $effectues[] = [
                             'Id_paiement' => $paiement->getIdPaiement(),
                             'Nom_educateur' => $educateurNom,
@@ -72,6 +72,14 @@ class ParentsPaiementsAttenteController extends AbstractController
                 }
             }
         }
+
+        // Trier $effectues : les "Provisoire" en premier, puis les "Effectué"
+        usort($effectues, function ($a, $b) {
+            if ($a['Statut_paiement'] === $b['Statut_paiement']) {
+                return 0;
+            }
+            return ($a['Statut_paiement'] === 'Provisoire') ? -1 : 1;
+        });
 
         return new JsonResponse([
             'en_attente' => $enAttente,
