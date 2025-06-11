@@ -28,7 +28,6 @@ final class DetailsPaiementController extends AbstractController
                 'NPI_agent' => $paiement->getNpiAgent(),
                 'Nom_agent' => $paiement->getNomAgent(),
                 'Prenom_agent' => $paiement->getPrenomAgent(),
-                'Email_agent' => $paiement->getEmailAgent(),
                 'Montant_paiement' => $paiement->getMontantPaiement(),
                 'Date_paiement' => $paiement->getDatePaiement(),
                 'Statut_paiement' => $paiement->getStatutPaiement(),
