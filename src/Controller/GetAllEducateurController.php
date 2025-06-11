@@ -16,7 +16,7 @@ public function listeEducateurs(EntityManagerInterface $entityManager): JsonResp
 {
     // Récupérer les éducateurs avec les infos basiques
     $educateursBase = $entityManager->getRepository(User::class)->createQueryBuilder('u')
-        ->select('u.NPI, u.Name, u.Firstname, u.Matiere, u.Statut_profil, u.Adresse, e.Experience, e.Parcours, e.Etoiles')
+        ->select('u.NPI, u.Name, u.Firstname, u.Matiere, u.Statut_profil, u.Adresse, e.Experience, e.Parcours, e.Etoiles, e.Niveau')
         ->leftJoin('App\Entity\Educateur', 'e', 'WITH', 'e.NPI = u.NPI')
         ->where('u.Role = :role')
         ->andWhere('u.Statut_profil = :statutProfile')
