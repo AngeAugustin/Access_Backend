@@ -61,6 +61,17 @@ final class AddEnfantController extends AbstractController
         $enfant->setNiveauPct($data['Niveau_pct']);
         $enfant->setNiveauPhilosophie($data['Niveau_philosophie']);
         $enfant->setNiveauSvt($data['Niveau_svt']);
+        $enfant->setNiveauEconomie($data['Niveau_economie']);
+        $enfant->setNiveauComptabilite($data['Niveau_comptabilite']);
+        $enfant->setNiveauComptagenerale($data['Niveau_comptagenerale']);
+        $enfant->setNiveauComptaanalytique($data['Niveau_comptaanalytique']);
+        $enfant->setNiveauComptasociete($data['Niveau_comptasociete']);
+        $enfant->setNiveauComptausuelle($data['Niveau_comptausuelle']);
+        $enfant->setNiveauTA($data['Niveau_TA']);
+        $enfant->setNiveauMathsfinanciere($data['Niveau_mathsfinanciere']);
+        $enfant->setNiveauDroit($data['Niveau_droit']);
+        $enfant->setNiveauMathsgenerale($data['Niveau_mathsgenerale']);
+        $enfant->setNiveauFiscalite($data['Niveau_fiscalite']);
 
         $entityManager->persist($enfant);
         $entityManager->persist($user); // Persiste les changements sur l'utilisateur

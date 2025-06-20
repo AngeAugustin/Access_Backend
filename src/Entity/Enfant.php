@@ -76,6 +76,39 @@ class Enfant
     #[ORM\Column(length: 20)]
     private ?string $NPI = null;
 
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Niveau_economie = null;
+
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Niveau_comptabilite = null;
+
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Niveau_comptagenerale = null;
+
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Niveau_comptaanalytique = null;
+
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Niveau_comptasociete = null;
+
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Niveau_comptausuelle = null;
+
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Niveau_TA = null;
+
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Niveau_mathsfinanciere = null;
+
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Niveau_droit = null;
+
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Niveau_mathsgenerale = null;
+
+    #[ORM\Column(length: 200, nullable: true)]
+    private ?string $Niveau_fiscalite = null;
+
     public function getNPIEnfant(): ?string
     {
         return $this->NPI_enfant;
@@ -336,6 +369,138 @@ class Enfant
     public function setNPI(string $NPI): static
     {
         $this->NPI = $NPI;
+
+        return $this;
+    }
+
+    public function getNiveauEconomie(): ?string
+    {
+        return $this->Niveau_economie;
+    }
+
+    public function setNiveauEconomie(?string $Niveau_economie): static
+    {
+        $this->Niveau_economie = $Niveau_economie;
+
+        return $this;
+    }
+
+    public function getNiveauComptabilite(): ?string
+    {
+        return $this->Niveau_comptabilite;
+    }
+
+    public function setNiveauComptabilite(?string $Niveau_comptabilite): static
+    {
+        $this->Niveau_comptabilite = $Niveau_comptabilite;
+
+        return $this;
+    }
+
+    public function getNiveauComptagenerale(): ?string
+    {
+        return $this->Niveau_comptagenerale;
+    }
+
+    public function setNiveauComptagenerale(?string $Niveau_comptagenerale): static
+    {
+        $this->Niveau_comptagenerale = $Niveau_comptagenerale;
+
+        return $this;
+    }
+
+    public function getNiveauComptaanalytique(): ?string
+    {
+        return $this->Niveau_comptaanalytique;
+    }
+
+    public function setNiveauComptaanalytique(?string $Niveau_comptaanalytique): static
+    {
+        $this->Niveau_comptaanalytique = $Niveau_comptaanalytique;
+
+        return $this;
+    }
+
+    public function getNiveauComptasociete(): ?string
+    {
+        return $this->Niveau_comptasociete;
+    }
+
+    public function setNiveauComptasociete(?string $Niveau_comptasociete): static
+    {
+        $this->Niveau_comptasociete = $Niveau_comptasociete;
+
+        return $this;
+    }
+
+    public function getNiveauComptausuelle(): ?string
+    {
+        return $this->Niveau_comptausuelle;
+    }
+
+    public function setNiveauComptausuelle(?string $Niveau_comptausuelle): static
+    {
+        $this->Niveau_comptausuelle = $Niveau_comptausuelle;
+
+        return $this;
+    }
+
+    public function getNiveauTA(): ?string
+    {
+        return $this->Niveau_TA;
+    }
+
+    public function setNiveauTA(?string $Niveau_TA): static
+    {
+        $this->Niveau_TA = $Niveau_TA;
+
+        return $this;
+    }
+
+    public function getNiveauMathsfinanciere(): ?string
+    {
+        return $this->Niveau_mathsfinanciere;
+    }
+
+    public function setNiveauMathsfinanciere(?string $Niveau_mathsfinanciere): static
+    {
+        $this->Niveau_mathsfinanciere = $Niveau_mathsfinanciere;
+
+        return $this;
+    }
+
+    public function getNiveauDroit(): ?string
+    {
+        return $this->Niveau_droit;
+    }
+
+    public function setNiveauDroit(?string $Niveau_droit): static
+    {
+        $this->Niveau_droit = $Niveau_droit;
+
+        return $this;
+    }
+
+    public function getNiveauMathsgenerale(): ?string
+    {
+        return $this->Niveau_mathsgenerale;
+    }
+
+    public function setNiveauMathsgenerale(?string $Niveau_mathsgenerale): static
+    {
+        $this->Niveau_mathsgenerale = $Niveau_mathsgenerale;
+
+        return $this;
+    }
+
+    public function getNiveauFiscalite(): ?string
+    {
+        return $this->Niveau_fiscalite;
+    }
+
+    public function setNiveauFiscalite(?string $Niveau_fiscalite): static
+    {
+        $this->Niveau_fiscalite = $Niveau_fiscalite;
 
         return $this;
     }
