@@ -73,6 +73,15 @@ class Paiement
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Paiement3 = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $Seances_paiement1 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $Seances_paiement2 = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $Seances_paiement3 = null;
+
     public function getIdPaiement(): ?string
     {
         return $this->Id_paiement;
@@ -320,6 +329,42 @@ class Paiement
     public function setPaiement3(?string $Paiement3): static
     {
         $this->Paiement3 = $Paiement3;
+
+        return $this;
+    }
+
+    public function getSeancesPaiement1(): ?int
+    {
+        return $this->Seances_paiement1;
+    }
+
+    public function setSeancesPaiement1(?int $Seances_paiement1): static
+    {
+        $this->Seances_paiement1 = $Seances_paiement1;
+
+        return $this;
+    }
+
+    public function getSeancesPaiement2(): ?int
+    {
+        return $this->Seances_paiement2;
+    }
+
+    public function setSeancesPaiement2(?int $Seances_paiement2): static
+    {
+        $this->Seances_paiement2 = $Seances_paiement2;
+
+        return $this;
+    }
+
+    public function getSeancesPaiement3(): ?int
+    {
+        return $this->Seances_paiement3;
+    }
+
+    public function setSeancesPaiement3(?int $Seances_paiement3): static
+    {
+        $this->Seances_paiement3 = $Seances_paiement3;
 
         return $this;
     }
