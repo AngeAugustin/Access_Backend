@@ -2,95 +2,136 @@
 
 namespace App\Controller;
 
-use App\Entity\Paiement;
 use App\Entity\Tutorat;
+use App\Entity\Paiement;
 use App\Entity\Tarif;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\ByteString;
 
-class AddTutoratController extends AbstractController
+final class AddTutoratController extends AbstractController
 {
-    #[Route('/add-tutorat', name: 'add_tutorat', methods: ['POST'])]
-    public function addTutorat(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/api/add_tutorat', name: 'api_add_tutorat', methods: ['POST'])]
+    public function apiAddTutorat(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
-        $tutorat = new Tutorat();
-        $paiement = new Paiement();
+        if ($data === null) {
+            return new JsonResponse(['error' => 'Invalid JSON format'], Response::HTTP_BAD_REQUEST);
+        }
 
-        // Remplir tutorat
-        $tutorat->setReferenceTutorat($data['reference_tutorat']);
-        $tutorat->setDureeReel($data['duree_reel']);
-        // autres setters…
+        // Vérifie si une référence existe déjà
+        $existingReference = $entityManager->getRepository(Tutorat::class)->findOneBy([
+            'Reference_tutorat' => $data['Reference_tutorat']
+        ]);
+        if ($existingReference) {
+            return new JsonResponse(['error' => 'Une relation de tutorat avec la même référence existe déjà'], Response::HTTP_BAD_REQUEST);
+        }
 
-        // Remplir paiement
-        $paiement->setIdPaiement(uniqid());
-        $paiement->setReferenceTutorat($tutorat->getReferenceTutorat());
-        $paiement->setNbrePaiements($data['nbre_paiements']);
-        $paiement->setDatePaiement1(new \DateTime($data['date_paiement1'] ?? ''));
-        $paiement->setDatePaiement2(new \DateTime($data['date_paiement2'] ?? ''));
-        $paiement->setDatePaiement3(new \DateTime($data['date_paiement3'] ?? ''));
-        $paiement->setClasseActuelle($data['classe_actuelle']);
-        // autres setters si nécessaire…
-
-        // Récupération du tarif
+        // Vérifie la présence du tarif pour la classe actuelle
         $tarif = $entityManager->getRepository(Tarif::class)->findOneBy([
-            'Classe' => $paiement->getClasseActuelle(),
+            'Classe_actuelle' => $data['Classe_actuelle']
         ]);
 
         if (!$tarif) {
-            return $this->json(['error' => 'Tarif introuvable pour la classe'], 404);
+            return new JsonResponse(['error' => 'Tarif non défini pour la classe actuelle'], Response::HTTP_BAD_REQUEST);
         }
 
-        // Persist initial
+        // Enregistrement dans Tutorat
+        $tutorat = new Tutorat();
+        $tutorat->setReferenceTutorat($data['Reference_tutorat']);
+        $tutorat->setNPIParent($data['NPI_parent']);
+        $tutorat->setNPIEducateur($data['NPI_educateur']);
+        $tutorat->setNPIEnfant($data['NPI_enfant']);
+        $tutorat->setDureeTutorat($data['Duree_tutorat']);
+        $tutorat->setSeance1($data['Seance1']);
+        $tutorat->setSeance2($data['Seance2']);
+        $tutorat->setStatutTutorat('En cours');
+
+        $tutorat->setDateTutorat(new \DateTime());
+        $dateDebut = new \DateTime();
+        $duree = $tutorat->getDureeTutorat(); // en semaines
+
+        // Calcul de la date de fin
+        $dateFin = (clone $dateDebut)->modify("+{$duree} weeks");
+        $tutorat->setDateFinTutorat($dateFin);
+
+        $today = new \DateTime();
+        if ($today->format('Y-m-d') >= $dateFin->format('Y-m-d')) {
+            $tutorat->setStatutTutorat('Terminé');
+        }
+
         $entityManager->persist($tutorat);
-        $entityManager->persist($paiement);
         $entityManager->flush();
 
-        // ----- LOGIQUE DE CALCUL DES PAIEMENTS -----
+        // Calculs liés au tarif
+        $Nbre_seances_semaine = $tarif->getNbreSeancesSemaine();
+        $Nbre_heure_seance = $tarif->getNbreHeureSeance();
+        $Tarif_horaire = $tarif->getTarifHoraire();
+        $Duree_tutorat = $data['Duree_tutorat'];
+        $Classe_actuelle = $data['Classe_actuelle'];
 
-        $dureeReel = $tutorat->getDureeReel();
-        $tarifHoraire = $tarif->getTarifHoraire();
-        $nbHeuresParSeance = $tarif->getNbreHeureSeance();
-        $today = new \DateTime();
-        $seancesDejaPayees = 0;
+        $paiement = new Paiement();
+        $paiement->setIdPaiement(random_int(1000000000, 9999999999));
+        $paiement->setReferenceTutorat($data['Reference_tutorat']);
+        $paiement->setNPIParent($data['NPI_parent']);
+        $paiement->setNPIEducateur($data['NPI_educateur']);
+        $paiement->setDureeTutorat($Duree_tutorat);
+        $paiement->setClasseActuelle($Classe_actuelle);
 
-        for ($i = 1; $i <= $paiement->getNbrePaiements(); $i++) {
-            $getterDate = 'getDatePaiement' . $i;
-            $getterMontant = 'getMontantPaiement' . $i;
-            $getterSeances = 'getSeancesPaiement' . $i;
+        $dateBase = new \DateTime();
+        $statut = 'En attente';
 
-            $setterMontant = 'setMontantPaiement' . $i;
-            $setterStatut = 'setStatutPaiement' . $i;
-            $setterSeances = 'setSeancesPaiement' . $i;
+        $dureeReel = $tutorat->getDureeReel(); // Doit être mis à jour dans ta logique de suivi réel
+        if ($Duree_tutorat <= 4) {
+            $paiement->setNbrePaiements(1);
+            $dureePourPaiement = min($dureeReel, $Duree_tutorat);
+            $montant = $Nbre_heure_seance * $Nbre_seances_semaine * $dureePourPaiement * $Tarif_horaire;
 
-            if (
-                method_exists($paiement, $getterDate) &&
-                method_exists($paiement, $setterMontant) &&
-                method_exists($paiement, $setterSeances) &&
-                method_exists($paiement, $setterStatut)
-            ) {
-                $datePaiement = $paiement->$getterDate();
+            $paiement->setMontantPaiement1($montant);
+            $paiement->setStatutPaiement1($statut);
+            $paiement->setDatePaiement1((clone $dateBase)->modify('+1 month'));
+            $paiement->setPaiement1(ByteString::fromRandom(8)->toString());
+            $paiement->setSeancesPaiement1($dureePourPaiement);
+        } else {
+            $nbrePaiements = intval(ceil($Duree_tutorat / 4));
+            $paiement->setNbrePaiements($nbrePaiements);
 
-                if ($datePaiement && $today >= $datePaiement && $paiement->$getterMontant() === null) {
-                    $seancesRestantes = $dureeReel - $seancesDejaPayees;
+            $seancesUtilisees = 0;
+            $currentDate = clone $dateBase;
 
-                    if ($seancesRestantes <= 0) {
-                        break;
-                    }
+            for ($i = 1; $i <= $nbrePaiements; $i++) {
+                $currentDate->modify('+1 month');
 
-                    $montant = $seancesRestantes * $nbHeuresParSeance * $tarifHoraire;
+                $dureePourCePaiement = min(4, max(0, $dureeReel - $seancesUtilisees));
+                $montant = $Nbre_heure_seance * $Nbre_seances_semaine * $dureePourCePaiement * $Tarif_horaire;
+                $seancesUtilisees += $dureePourCePaiement;
 
-                    $paiement->$setterMontant($montant);
-                    $paiement->$setterSeances($seancesRestantes);
-                    $paiement->$setterStatut('En attente');
+                $suffix = $i;
+                $setters = [
+                    'Montant'  => "setMontantPaiement$suffix",
+                    'Statut'   => "setStatutPaiement$suffix",
+                    'Date'     => "setDatePaiement$suffix",
+                    'Token'    => "setPaiement$suffix",
+                    'Seances'  => "setSeancesPaiement$suffix"
+                ];
 
-                    $seancesDejaPayees += $seancesRestantes;
-                } else {
-                    $seancesDejaPayees += $paiement->$getterSeances() ?? 0;
+                if (
+                    method_exists($paiement, $setters['Montant']) &&
+                    method_exists($paiement, $setters['Statut']) &&
+                    method_exists($paiement, $setters['Date']) &&
+                    method_exists($paiement, $setters['Token']) &&
+                    method_exists($paiement, $setters['Seances'])
+                ) {
+                    $paiement->{$setters['Montant']}($montant);
+                    $paiement->{$setters['Statut']}($statut);
+                    $paiement->{$setters['Date']}(clone $currentDate);
+                    $paiement->{$setters['Token']}(ByteString::fromRandom(8)->toString());
+                    $paiement->{$setters['Seances']}($dureePourCePaiement);
                 }
             }
         }
@@ -98,11 +139,15 @@ class AddTutoratController extends AbstractController
         $entityManager->persist($paiement);
         $entityManager->flush();
 
-        return $this->json(['success' => true]);
+        return new JsonResponse([
+            'Message' => 'Relation de tutorat créée avec succès',
+            'Reference_tutorat' => $tutorat->getReferenceTutorat()
+        ]);
     }
 }
 
-// Foreign key sql syntax
+
+// Forign key sql syntax
 /* ALTER TABLE paiement
 ADD CONSTRAINT fk_reference_tutorat FOREIGN KEY (Reference_tutorat)
 REFERENCES tutorat (Reference_tutorat)
