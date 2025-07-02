@@ -43,6 +43,9 @@ class Tutorat
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $Date_fin_tutorat = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $Duree_reel = 0;
+
     public function getReferenceTutorat(): ?string
     {
         return $this->Reference_tutorat;
@@ -171,6 +174,18 @@ class Tutorat
     public function setDateFinTutorat(?\DateTimeInterface $Date_fin_tutorat): static
     {
         $this->Date_fin_tutorat = $Date_fin_tutorat;
+
+        return $this;
+    }
+
+    public function getDureeReel(): ?int
+    {
+        return $this->Duree_reel;
+    }
+
+    public function setDureeReel(?int $Duree_reel): static
+    {
+        $this->Duree_reel = $Duree_reel;
 
         return $this;
     }
