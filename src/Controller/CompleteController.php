@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Educateur;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -38,6 +39,13 @@ public function apiComplete(Request $request, EntityManagerInterface $entityMana
     $educateur->setAdresseGarant1($data['Adresse_garant1'] ?? null);
     $educateur->setGarant2($data['Garant_2'] ?? null);
     $educateur->setAdresseGarant2($data['Adresse_garant2'] ?? null);
+
+    // Récupérer l'utilisateur associé à l'éducateur et mettre à jour son statut
+    $user = $educateur->getUser();
+    if ($user) {
+        $user->setStatutProfil('Soumis');
+        $entityManager->persist($user);
+    }
 
     // Mise à jour des jours et heures des disponibilités
     $educateur->setDispo1Jour($data['Dispo1_jour'] ?? null);
