@@ -3,15 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Educateur;
-use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class CompleteController extends AbstractController
 {
@@ -75,13 +72,6 @@ public function apiComplete(Request $request, EntityManagerInterface $entityMana
 
     if (isset($files['Diplome_professionnel'])) {
         $educateur->setDiplomeProfessionnel(file_get_contents($files['Diplome_professionnel']->getPathname()));
-    }
-
-    // Mise à jour du statut profil de l'utilisateur à "Soumis"
-    $user = $entityManager->getRepository(User::class)->findOneBy(['NPI' => $data['NPI']]);
-    if ($user) {
-        $user->setStatutProfil('Soumis');
-        $entityManager->persist($user);
     }
 
     $entityManager->persist($educateur);
