@@ -40,13 +40,6 @@ public function apiComplete(Request $request, EntityManagerInterface $entityMana
     $educateur->setGarant2($data['Garant_2'] ?? null);
     $educateur->setAdresseGarant2($data['Adresse_garant2'] ?? null);
 
-    // Récupérer l'utilisateur associé à l'éducateur et mettre à jour son statut
-    $user = $educateur->getUser();
-    if ($user) {
-        $user->setStatutProfil('Soumis');
-        $entityManager->persist($user);
-    }
-
     // Mise à jour des jours et heures des disponibilités
     $educateur->setDispo1Jour($data['Dispo1_jour'] ?? null);
     $educateur->setDispo1Heure($data['Dispo1_heure'] ?? null);
@@ -82,6 +75,13 @@ public function apiComplete(Request $request, EntityManagerInterface $entityMana
 
     if (isset($files['Diplome_professionnel'])) {
         $educateur->setDiplomeProfessionnel(file_get_contents($files['Diplome_professionnel']->getPathname()));
+    }
+
+    // Mise à jour du statut profil de l'utilisateur à "Soumis"
+    $user = $entityManager->getRepository(User::class)->findOneBy(['NPI' => $data['NPI']]);
+    if ($user) {
+        $user->setStatutProfil('Soumis');
+        $entityManager->persist($user);
     }
 
     $entityManager->persist($educateur);
