@@ -62,6 +62,32 @@ class Educateur
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $Dispo4 = null;
 
+    // Jours des disponibilités (Lundi, Mardi, Mercredi, etc.)
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $Dispo1_jour = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $Dispo2_jour = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $Dispo3_jour = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $Dispo4_jour = null;
+
+    // Heures des disponibilités (intervalles de 3h : 8h-11h, 11h-14h, 14h-17h, 17h-20h)
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $Dispo1_heure = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $Dispo2_heure = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $Dispo3_heure = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $Dispo4_heure = null;
+
     #[ORM\Column(type: 'blob', nullable: true)]
     private $Photo_educateur = null;
 
@@ -263,6 +289,104 @@ class Educateur
     public function setDispo4(?string $Dispo4): static
     {
         $this->Dispo4 = $Dispo4;
+
+        return $this;
+    }
+
+    // Getters et setters pour les jours des disponibilités
+    public function getDispo1Jour(): ?string
+    {
+        return $this->Dispo1_jour;
+    }
+
+    public function setDispo1Jour(?string $Dispo1_jour): static
+    {
+        $this->Dispo1_jour = $Dispo1_jour;
+
+        return $this;
+    }
+
+    public function getDispo2Jour(): ?string
+    {
+        return $this->Dispo2_jour;
+    }
+
+    public function setDispo2Jour(?string $Dispo2_jour): static
+    {
+        $this->Dispo2_jour = $Dispo2_jour;
+
+        return $this;
+    }
+
+    public function getDispo3Jour(): ?string
+    {
+        return $this->Dispo3_jour;
+    }
+
+    public function setDispo3Jour(?string $Dispo3_jour): static
+    {
+        $this->Dispo3_jour = $Dispo3_jour;
+
+        return $this;
+    }
+
+    public function getDispo4Jour(): ?string
+    {
+        return $this->Dispo4_jour;
+    }
+
+    public function setDispo4Jour(?string $Dispo4_jour): static
+    {
+        $this->Dispo4_jour = $Dispo4_jour;
+
+        return $this;
+    }
+
+    // Getters et setters pour les heures des disponibilités
+    public function getDispo1Heure(): ?string
+    {
+        return $this->Dispo1_heure;
+    }
+
+    public function setDispo1Heure(?string $Dispo1_heure): static
+    {
+        $this->Dispo1_heure = $Dispo1_heure;
+
+        return $this;
+    }
+
+    public function getDispo2Heure(): ?string
+    {
+        return $this->Dispo2_heure;
+    }
+
+    public function setDispo2Heure(?string $Dispo2_heure): static
+    {
+        $this->Dispo2_heure = $Dispo2_heure;
+
+        return $this;
+    }
+
+    public function getDispo3Heure(): ?string
+    {
+        return $this->Dispo3_heure;
+    }
+
+    public function setDispo3Heure(?string $Dispo3_heure): static
+    {
+        $this->Dispo3_heure = $Dispo3_heure;
+
+        return $this;
+    }
+
+    public function getDispo4Heure(): ?string
+    {
+        return $this->Dispo4_heure;
+    }
+
+    public function setDispo4Heure(?string $Dispo4_heure): static
+    {
+        $this->Dispo4_heure = $Dispo4_heure;
 
         return $this;
     }
