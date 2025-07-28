@@ -86,10 +86,11 @@ final class AddTutoratController extends AbstractController
         $dateBase = new \DateTime();
         $statut = 'En attente';
 
-        $dureeReel = $tutorat->getDureeReel(); // Doit être mis à jour dans ta logique de suivi réel
+        // Pour la création initiale, on utilise la durée prévue du tutorat
+        // Les montants seront recalculés automatiquement dans AddSeanceController selon la durée réelle
         if ($Duree_tutorat <= 4) {
             $paiement->setNbrePaiements(1);
-            $dureePourPaiement = min($dureeReel, $Duree_tutorat);
+            $dureePourPaiement = $Duree_tutorat; // Utilise la durée prévue initialement
             $montant = $Nbre_heure_seance * $Nbre_seances_semaine * $dureePourPaiement * $Tarif_horaire;
 
             $paiement->setMontantPaiement1($montant);
@@ -107,7 +108,7 @@ final class AddTutoratController extends AbstractController
             for ($i = 1; $i <= $nbrePaiements; $i++) {
                 $currentDate->modify('+1 month');
 
-                $dureePourCePaiement = min(4, max(0, $dureeReel - $seancesUtilisees));
+                $dureePourCePaiement = min(4, max(0, $Duree_tutorat - $seancesUtilisees)); // Utilise la durée prévue initialement
                 $montant = $Nbre_heure_seance * $Nbre_seances_semaine * $dureePourCePaiement * $Tarif_horaire;
                 $seancesUtilisees += $dureePourCePaiement;
 
@@ -146,6 +147,9 @@ final class AddTutoratController extends AbstractController
     }
 }
 
+// NOTE: Les montants de paiement sont initialement calculés avec la durée prévue du tutorat.
+// Ils seront automatiquement recalculés en fonction de la durée réelle à chaque ajout de séance
+// dans AddSeanceController grâce à la méthode recalculerMontantsPaiement().
 
 // Forign key sql syntax
 /* ALTER TABLE paiement

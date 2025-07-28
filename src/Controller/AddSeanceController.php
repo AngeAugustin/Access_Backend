@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Seance;
-use App\Entity\Tutorat; 
+use App\Entity\Tutorat;
+use App\Entity\Paiement;
+use App\Entity\Tarif;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -44,6 +46,9 @@ public function apiAddSeance(Request $request, EntityManagerInterface $entityMan
     // Incrémentation de la durée réelle
     $tutorat->setDureeReel($tutorat->getDureeReel() + 1);
 
+    // Recalcul des montants de paiement
+    $this->recalculerMontantsPaiement($tutorat, $entityManager);
+
     // Création et enregistrement de la séance
     $seance = new Seance();
     $seance->setIdSeance($data['Id_seance']);
@@ -64,5 +69,69 @@ public function apiAddSeance(Request $request, EntityManagerInterface $entityMan
         'Id_seance' => $seance->getIdSeance()
     ]);
 }
+
+    /**
+     * Recalcule les montants de paiement en fonction de la durée réelle
+     */
+    private function recalculerMontantsPaiement(Tutorat $tutorat, EntityManagerInterface $entityManager): void
+    {
+        // Récupération du paiement associé au tutorat
+        $paiement = $entityManager->getRepository(Paiement::class)->findOneBy([
+            'Reference_tutorat' => $tutorat->getReferenceTutorat()
+        ]);
+
+        if (!$paiement) {
+            return; // Pas de paiement trouvé, on sort
+        }
+
+        // Récupération du tarif pour les calculs
+        $tarif = $entityManager->getRepository(Tarif::class)->findOneBy([
+            'Classe_actuelle' => $paiement->getClasseActuelle()
+        ]);
+
+        if (!$tarif) {
+            return; // Pas de tarif trouvé, on sort
+        }
+
+        // Variables pour les calculs
+        $dureeReel = $tutorat->getDureeReel();
+        $dureeTutorat = (int) $tutorat->getDureeTutorat();
+        $nbreSeancesSemaine = $tarif->getNbreSeancesSemaine();
+        $nbreHeureSeance = $tarif->getNbreHeureSeance();
+        $tarifHoraire = $tarif->getTarifHoraire();
+        $nbrePaiements = $paiement->getNbrePaiements();
+
+        // Recalcul des montants selon le nombre de paiements
+        if ($nbrePaiements == 1) {
+            // Un seul paiement
+            $dureePourPaiement = min($dureeReel, $dureeTutorat);
+            $montant = $nbreHeureSeance * $nbreSeancesSemaine * $dureePourPaiement * $tarifHoraire;
+            
+            $paiement->setMontantPaiement1($montant);
+            $paiement->setSeancesPaiement1($dureePourPaiement);
+        } else {
+            // Paiements multiples
+            $seancesUtilisees = 0;
+            
+            for ($i = 1; $i <= $nbrePaiements && $i <= 3; $i++) {
+                $dureePourCePaiement = min(4, max(0, $dureeReel - $seancesUtilisees));
+                $montant = $nbreHeureSeance * $nbreSeancesSemaine * $dureePourCePaiement * $tarifHoraire;
+                $seancesUtilisees += $dureePourCePaiement;
+
+                // Construction dynamique des noms de méthodes
+                $setMontant = "setMontantPaiement$i";
+                $setSeances = "setSeancesPaiement$i";
+
+                // Vérification et appel des méthodes
+                if (method_exists($paiement, $setMontant) && method_exists($paiement, $setSeances)) {
+                    $paiement->$setMontant($montant);
+                    $paiement->$setSeances($dureePourCePaiement);
+                }
+            }
+        }
+
+        // Sauvegarde des modifications
+        $entityManager->persist($paiement);
+    }
 
 }
