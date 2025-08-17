@@ -37,20 +37,21 @@ class GetParentsDetailsController extends AbstractController
 
         // Récupérer les éducateurs associés au parent
         $tutorats = $entityManager->getRepository(Tutorat::class)->findBy(['NPI_parent' => $NPI]);
-        $educateursNPIs = array_unique(array_map(function (Tutorat $tutorat) {
-            return $tutorat->getNpiEducateur();
-        }, $tutorats));
 
-        // Récupérer les informations des éducateurs
-        $educateurs = $entityManager->getRepository(User::class)->findBy(['NPI' => $educateursNPIs]);
-        $educateursData = array_map(function (User $educateur) {
-            return [
-                'NPI_educateur' => $educateur->getNPI(),
-                'Name' => $educateur->getName(),
-                'Firstname' => $educateur->getFirstname(),
-                'Matiere' => $educateur->getMatiere(),
-            ];
-        }, $educateurs);
+        // Associer chaque éducateur à son statut de tutorat
+        $educateursData = [];
+        foreach ($tutorats as $tutorat) {
+            $educateur = $entityManager->getRepository(User::class)->findOneBy(['NPI' => $tutorat->getNpiEducateur()]);
+            if ($educateur) {
+                $educateursData[] = [
+                    'NPI_educateur' => $educateur->getNPI(),
+                    'Name' => $educateur->getName(),
+                    'Firstname' => $educateur->getFirstname(),
+                    'Matiere' => $educateur->getMatiere(),
+                    'Statut_tutorat' => $tutorat->getStatutTutorat(),
+                ];
+            }
+        }
 
         // Retourner les informations sous forme JSON
         return $this->json([
