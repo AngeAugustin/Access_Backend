@@ -22,6 +22,9 @@ class Enfant
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $Date_naissance = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $Date_inscription = null;
+
     #[ORM\Column(length: 5)]
     private ?string $Sexe_enfant = null;
 
@@ -153,6 +156,18 @@ class Enfant
     public function setDateNaissance(\DateTimeInterface $Date_naissance): static
     {
         $this->Date_naissance = $Date_naissance;
+
+        return $this;
+    }
+
+    public function getDateInscription(): ?\DateTimeInterface
+    {
+        return $this->Date_inscription;
+    }
+
+    public function setDateInscription(\DateTimeInterface $Date_inscription): static
+    {
+        $this->Date_inscription = $Date_inscription;
 
         return $this;
     }

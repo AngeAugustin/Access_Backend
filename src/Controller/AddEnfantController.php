@@ -44,6 +44,7 @@ final class AddEnfantController extends AbstractController
         $enfant->setNomEnfant($data['Nom_enfant']);
         $enfant->setPrenomEnfant($data['Prenom_enfant']);
         $enfant->setDateNaissance(new \DateTime($data['Date_naissance']));
+        $enfant->setDateInscription(new \DateTime());
         $enfant->setSexeEnfant($data['Sexe_enfant']);
         $enfant->setEcolePrecedente($data['Ecole_precedente']);
         $enfant->setClassePrecedente($data['Classe_precedente']);
