@@ -42,7 +42,7 @@ final class DashboardController extends AbstractController
 
     $datesInscriptionEducateurs = array_map(fn($u) => $u->getDateInscription(), $educateurs);
     $datesInscriptionParents = array_map(fn($u) => $u->getDateInscription(), $parents);
-    $datesInscriptionEnfants = array_map(fn($e) => $e->getDateNaissance(), $enfants);
+    $datesInscriptionEnfants = array_map(fn($e) => $e->getDateInscription(), $enfants);
         return $this->json([
             'nbEducateurs' => $nbEducateurs,
             'nbParents' => $nbParents,
