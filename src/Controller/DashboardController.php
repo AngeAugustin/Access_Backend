@@ -29,49 +29,11 @@ final class DashboardController extends AbstractController
         $nbPaiementsAdmin = $paiementAdminRepository->count(['Statut_paiement' => 'Effectué']);
         $nbReclamations = $reclamationRepository->count([]);
 
-            // Evolution du nombre de paiements effectués par mois (Parents)
-            $paiementsParentParMois = $paiementParentRepository->createQueryBuilder('p')
-                ->select("SUBSTRING(p.Date_paiement, 1, 7) AS mois, COUNT(p.Id_paiement) AS total")
-                ->where("p.Statut_paiement = 'Effectué'")
-                ->groupBy('mois')
-                ->orderBy('mois', 'ASC')
-                ->getQuery()
-                ->getResult();
-
-            // Evolution du nombre de paiements effectués par mois (Admins)
-            $paiementsAdminParMois = $paiementAdminRepository->createQueryBuilder('p')
-                ->select("SUBSTRING(p.Date_paiement, 1, 7) AS mois, COUNT(p.Id_paiement) AS total")
-                ->where("p.Statut_paiement = 'Effectué'")
-                ->groupBy('mois')
-                ->orderBy('mois', 'ASC')
-                ->getQuery()
-                ->getResult();
-
-            // Evolution du nombre d'inscrits par mois (Educateurs)
-            $educateursParMois = $userRepository->createQueryBuilder('u')
-                ->select("DATE_FORMAT(u.Date_inscription, '%Y-%m') AS mois, COUNT(u.NPI) AS total")
-                ->where("u.Role = 'EDUCATEUR'")
-                ->groupBy('mois')
-                ->orderBy('mois', 'ASC')
-                ->getQuery()
-                ->getResult();
-
-            // Evolution du nombre d'inscrits par mois (Parents)
-            $parentsParMois = $userRepository->createQueryBuilder('u')
-                ->select("DATE_FORMAT(u.Date_inscription, '%Y-%m') AS mois, COUNT(u.NPI) AS total")
-                ->where("u.Role = 'PARENT'")
-                ->groupBy('mois')
-                ->orderBy('mois', 'ASC')
-                ->getQuery()
-                ->getResult();
-
-            // Evolution du nombre d'inscrits par mois (Enfants)
-            $enfantsParMois = $enfantRepository->createQueryBuilder('e')
-                ->select("DATE_FORMAT(e.Date_naissance, '%Y-%m') AS mois, COUNT(e.NPI_enfant) AS total")
-                ->groupBy('mois')
-                ->orderBy('mois', 'ASC')
-                ->getQuery()
-                ->getResult();
+    // Données brutes pour les graphes
+    $paiementsParentBrut = $paiementParentRepository->findAll();
+    $paiementsAdminBrut = $paiementAdminRepository->findAll();
+    $usersBrut = $userRepository->findAll();
+    $enfantsBrut = $enfantRepository->findAll();
         return $this->json([
             'nbEducateurs' => $nbEducateurs,
             'nbParents' => $nbParents,
@@ -79,11 +41,10 @@ final class DashboardController extends AbstractController
             'nbEducateursNouveaux' => $educateursNouveaux,
             'nbPaiementsParent' => $nbPaiementsParent,
             'nbPaiementsAdmin' => $nbPaiementsAdmin,
-                'paiementsParentParMois' => $paiementsParentParMois,
-                'paiementsAdminParMois' => $paiementsAdminParMois,
-                'educateursParMois' => $educateursParMois,
-                'parentsParMois' => $parentsParMois,
-                'enfantsParMois' => $enfantsParMois,
+            'paiementsParentBrut' => $paiementsParentBrut,
+            'paiementsAdminBrut' => $paiementsAdminBrut,
+            'usersBrut' => $usersBrut,
+            'enfantsBrut' => $enfantsBrut,
             'nbReclamations' => $nbReclamations,
         ]);
     }
