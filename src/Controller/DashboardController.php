@@ -29,11 +29,20 @@ final class DashboardController extends AbstractController
         $nbPaiementsAdmin = $paiementAdminRepository->count(['Statut_paiement' => 'Effectué']);
         $nbReclamations = $reclamationRepository->count([]);
 
-    // Données brutes pour les graphes
-    $paiementsParentBrut = $paiementParentRepository->findAll();
-    $paiementsAdminBrut = $paiementAdminRepository->findAll();
-    $usersBrut = $userRepository->findAll();
-    $enfantsBrut = $enfantRepository->findAll();
+    // Comptes et dates pour les graphes
+    $paiementsParentEffectues = $paiementParentRepository->findBy(['Statut_paiement' => 'Effectué']);
+    $paiementsAdminEffectues = $paiementAdminRepository->findBy(['Statut_paiement' => 'Effectué']);
+
+    $datesPaiementsParent = array_map(fn($p) => $p->getDatePaiement(), $paiementsParentEffectues);
+    $datesPaiementsAdmin = array_map(fn($p) => $p->getDatePaiement(), $paiementsAdminEffectues);
+
+    $educateurs = $userRepository->findBy(['Role' => 'EDUCATEUR']);
+    $parents = $userRepository->findBy(['Role' => 'PARENT']);
+    $enfants = $enfantRepository->findAll();
+
+    $datesInscriptionEducateurs = array_map(fn($u) => $u->getDateInscription(), $educateurs);
+    $datesInscriptionParents = array_map(fn($u) => $u->getDateInscription(), $parents);
+    $datesInscriptionEnfants = array_map(fn($e) => $e->getDateNaissance(), $enfants);
         return $this->json([
             'nbEducateurs' => $nbEducateurs,
             'nbParents' => $nbParents,
@@ -41,10 +50,16 @@ final class DashboardController extends AbstractController
             'nbEducateursNouveaux' => $educateursNouveaux,
             'nbPaiementsParent' => $nbPaiementsParent,
             'nbPaiementsAdmin' => $nbPaiementsAdmin,
-            'paiementsParentBrut' => $paiementsParentBrut,
-            'paiementsAdminBrut' => $paiementsAdminBrut,
-            'usersBrut' => $usersBrut,
-            'enfantsBrut' => $enfantsBrut,
+            'nbPaiementsParentEffectues' => count($paiementsParentEffectues),
+            'datesPaiementsParent' => $datesPaiementsParent,
+            'nbPaiementsAdminEffectues' => count($paiementsAdminEffectues),
+            'datesPaiementsAdmin' => $datesPaiementsAdmin,
+            'nbInscriptionEducateurs' => count($educateurs),
+            'datesInscriptionEducateurs' => $datesInscriptionEducateurs,
+            'nbInscriptionParents' => count($parents),
+            'datesInscriptionParents' => $datesInscriptionParents,
+            'nbInscriptionEnfants' => count($enfants),
+            'datesInscriptionEnfants' => $datesInscriptionEnfants,
             'nbReclamations' => $nbReclamations,
         ]);
     }
