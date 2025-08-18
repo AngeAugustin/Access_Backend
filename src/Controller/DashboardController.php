@@ -49,7 +49,7 @@ final class DashboardController extends AbstractController
 
             // Evolution du nombre d'inscrits par mois (Educateurs)
             $educateursParMois = $userRepository->createQueryBuilder('u')
-                ->select("FUNCTION('DATE_FORMAT', u.Date_inscription, '%Y-%m') AS mois, COUNT(u.NPI) AS total")
+                ->select("DATE_FORMAT(u.Date_inscription, '%Y-%m') AS mois, COUNT(u.NPI) AS total")
                 ->where("u.Role = 'EDUCATEUR'")
                 ->groupBy('mois')
                 ->orderBy('mois', 'ASC')
@@ -58,7 +58,7 @@ final class DashboardController extends AbstractController
 
             // Evolution du nombre d'inscrits par mois (Parents)
             $parentsParMois = $userRepository->createQueryBuilder('u')
-                ->select("FUNCTION('DATE_FORMAT', u.Date_inscription, '%Y-%m') AS mois, COUNT(u.NPI) AS total")
+                ->select("DATE_FORMAT(u.Date_inscription, '%Y-%m') AS mois, COUNT(u.NPI) AS total")
                 ->where("u.Role = 'PARENT'")
                 ->groupBy('mois')
                 ->orderBy('mois', 'ASC')
@@ -67,7 +67,7 @@ final class DashboardController extends AbstractController
 
             // Evolution du nombre d'inscrits par mois (Enfants)
             $enfantsParMois = $enfantRepository->createQueryBuilder('e')
-                ->select("FUNCTION('DATE_FORMAT', e.Date_naissance, '%Y-%m') AS mois, COUNT(e.NPI_enfant) AS total")
+                ->select("DATE_FORMAT(e.Date_naissance, '%Y-%m') AS mois, COUNT(e.NPI_enfant) AS total")
                 ->groupBy('mois')
                 ->orderBy('mois', 'ASC')
                 ->getQuery()
