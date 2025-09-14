@@ -49,11 +49,20 @@ final class StopTutoratController extends AbstractController
                 }
             }
             // Mettre à jour les paiements
+            // Récupérer le tarif pour le calcul du montant
+            $tarif = $entityManager->getRepository(\App\Entity\Tarif::class)->findOneBy([
+                'Classe_actuelle' => $paiement->getClasseActuelle()
+            ]);
+            $Nbre_heure_seance = $tarif ? $tarif->getNbreHeureSeance() : 0;
+            $Nbre_seances_semaine = $tarif ? $tarif->getNbreSeancesSemaine() : 0;
+            $Tarif_horaire = $tarif ? $tarif->getTarifHoraire() : 0;
+            $Duree_tutorat = $paiement->getDureeTutorat();
             for ($i = 1; $i <= $nbrePaiements; $i++) {
                 $getStatut = "getStatutPaiement$i";
                 $setStatut = "setStatutPaiement$i";
                 $getDate = "getDatePaiement$i";
                 $setDate = "setDatePaiement$i";
+                $setMontant = "setMontantPaiement$i";
                 $statut = $paiement->$getStatut();
                 if ($statut === 'En attente') {
                     if ($prochainIndex !== null && $i === $prochainIndex) {
@@ -61,10 +70,14 @@ final class StopTutoratController extends AbstractController
                         $paiement->$setStatut('En attente');
                         $nouvelleDate = (clone $dateArret)->modify('+2 days');
                         $paiement->$setDate($nouvelleDate);
+                        // Calcul du montant
+                        $montant = $Nbre_heure_seance * $Nbre_seances_semaine * $Duree_tutorat * $Tarif_horaire;
+                        $paiement->$setMontant($montant);
                         $paiementsModifies[] = [
                             'index' => $i,
                             'statut' => 'En attente',
                             'date_paiement' => $nouvelleDate->format('Y-m-d'),
+                            'montant' => $montant,
                         ];
                     } else {
                         $paiement->$setStatut('Suspendu');
