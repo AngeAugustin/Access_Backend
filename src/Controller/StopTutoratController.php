@@ -57,12 +57,14 @@ final class StopTutoratController extends AbstractController
                 $statut = $paiement->$getStatut();
                 if ($statut === 'En attente') {
                     if ($prochainIndex !== null && $i === $prochainIndex) {
-                        $paiement->$setStatut('Effectué');
-                        $paiement->$setDate($dateArret);
+                        // Le prochain paiement reste 'En attente', date = date du jour + 2 jours
+                        $paiement->$setStatut('En attente');
+                        $nouvelleDate = (clone $dateArret)->modify('+2 days');
+                        $paiement->$setDate($nouvelleDate);
                         $paiementsModifies[] = [
                             'index' => $i,
-                            'statut' => 'Effectué',
-                            'date_paiement' => $dateArret->format('Y-m-d'),
+                            'statut' => 'En attente',
+                            'date_paiement' => $nouvelleDate->format('Y-m-d'),
                         ];
                     } else {
                         $paiement->$setStatut('Suspendu');
