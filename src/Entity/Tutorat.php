@@ -150,7 +150,11 @@ class Tutorat
     public function setStatutTutorat(?string $Statut_tutorat): static
     {
         $this->Statut_tutorat = $Statut_tutorat;
-
+        // Si le statut devient 'Terminé', on met Seance1 et Seance2 à null
+        if ($Statut_tutorat === 'Terminé') {
+            $this->setSeance1(null);
+            $this->setSeance2(null);
+        }
         return $this;
     }
 
