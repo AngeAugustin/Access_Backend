@@ -20,35 +20,6 @@ final class AddTutoratController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        // Vérification des disponibilités libres de l'éducateur
-        $educateur = $entityManager->getRepository(\App\Entity\Educateur::class)->findOneBy(['NPI' => $data['NPI_educateur']]);
-        if (!$educateur) {
-            return new JsonResponse(['error' => "Éducateur non trouvé"], Response::HTTP_BAD_REQUEST);
-        }
-
-        // Récupérer toutes ses disponibilités
-        $dispos = [];
-        foreach ([1,2,3,4] as $i) {
-            $dispo = $educateur->{"getDispo$i"}();
-            if ($dispo) $dispos[] = $dispo;
-        }
-
-        // Récupérer toutes les séances occupées (tutorats en cours ou non terminés)
-        $tutorats = $entityManager->getRepository(\App\Entity\Tutorat::class)->findBy(['NPI_educateur' => $data['NPI_educateur']]);
-        $disposOccupees = [];
-        foreach ($tutorats as $tut) {
-            if ($tut->getStatutTutorat() !== 'Terminé') {
-                if ($tut->getSeance1()) $disposOccupees[] = $tut->getSeance1();
-                if ($tut->getSeance2()) $disposOccupees[] = $tut->getSeance2();
-            }
-        }
-
-        // Calculer les disponibilités libres
-        $disposLibres = array_diff($dispos, $disposOccupees);
-        if (count($disposLibres) < 2) {
-            return new JsonResponse(['error' => "L'éducateur n'a pas au moins 2 disponibilités libres"], Response::HTTP_BAD_REQUEST);
-        }
-
         if ($data === null) {
             return new JsonResponse(['error' => 'Invalid JSON format'], Response::HTTP_BAD_REQUEST);
         }
