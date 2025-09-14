@@ -56,7 +56,11 @@ final class StopTutoratController extends AbstractController
             $Nbre_heure_seance = $tarif ? $tarif->getNbreHeureSeance() : 0;
             $Nbre_seances_semaine = $tarif ? $tarif->getNbreSeancesSemaine() : 0;
             $Tarif_horaire = $tarif ? $tarif->getTarifHoraire() : 0;
-            $Duree_tutorat = $paiement->getDureeTutorat();
+            // Récupérer le nombre de séances réelles
+            $tutoratAssocie = $entityManager->getRepository(\App\Entity\Tutorat::class)->findOneBy([
+                'Reference_tutorat' => $paiement->getReferenceTutorat()
+            ]);
+            $Duree_reel = $tutoratAssocie ? $tutoratAssocie->getDureeReel() : 0;
             for ($i = 1; $i <= $nbrePaiements; $i++) {
                 $getStatut = "getStatutPaiement$i";
                 $setStatut = "setStatutPaiement$i";
@@ -71,7 +75,7 @@ final class StopTutoratController extends AbstractController
                         $nouvelleDate = (clone $dateArret)->modify('+2 days');
                         $paiement->$setDate($nouvelleDate);
                         // Calcul du montant
-                        $montant = $Nbre_heure_seance * $Nbre_seances_semaine * $Duree_tutorat * $Tarif_horaire;
+                        $montant = $Nbre_heure_seance * $Nbre_seances_semaine * $Duree_reel * $Tarif_horaire;
                         $paiement->$setMontant($montant);
                         $paiementsModifies[] = [
                             'index' => $i,
