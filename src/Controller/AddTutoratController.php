@@ -185,12 +185,5 @@ final class AddTutoratController extends AbstractController
 // dans AddSeanceController grâce à la méthode recalculerMontantsPaiement().
 
 // Forign key sql syntax
-/* ALTER TABLE paiement
-ADD CONSTRAINT fk_reference_tutorat FOREIGN KEY (Reference_tutorat)
-REFERENCES tutorat (Reference_tutorat)
-ON DELETE CASCADE
-*/
-
+// (voir migrations ou documentation SQL)
 }
-ON UPDATE CASCADE;
- */
