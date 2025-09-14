@@ -18,8 +18,9 @@ final class AddTutoratController extends AbstractController
     #[Route('/api/add_tutorat', name: 'api_add_tutorat', methods: ['POST'])]
     public function apiAddTutorat(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        // Vérification des disponibilités libres de l'éducateur
         $data = json_decode($request->getContent(), true);
+
+        // Vérification des disponibilités libres de l'éducateur
         $educateur = $entityManager->getRepository(\App\Entity\Educateur::class)->findOneBy(['NPI' => $data['NPI_educateur']]);
         if (!$educateur) {
             return new JsonResponse(['error' => "Éducateur non trouvé"], Response::HTTP_BAD_REQUEST);
@@ -32,26 +33,21 @@ final class AddTutoratController extends AbstractController
             if ($dispo) $dispos[] = $dispo;
         }
 
-        // Récupérer toutes les séances de l'éducateur dans les tutorats non terminés
-        $tutoratsEnCours = $entityManager->getRepository(\App\Entity\Tutorat::class)->findBy([
-            'NPI_educateur' => $data['NPI_educateur'],
-            'Statut_tutorat' => 'En cours'
-        ]);
-        $seancesOccupees = [];
-        foreach ($tutoratsEnCours as $tut) {
-            if ($tut->getSeance1()) $seancesOccupees[] = $tut->getSeance1();
-            if ($tut->getSeance2()) $seancesOccupees[] = $tut->getSeance2();
+        // Récupérer toutes les séances occupées (tutorats en cours ou non terminés)
+        $tutorats = $entityManager->getRepository(\App\Entity\Tutorat::class)->findBy(['NPI_educateur' => $data['NPI_educateur']]);
+        $disposOccupees = [];
+        foreach ($tutorats as $tut) {
+            if ($tut->getStatutTutorat() !== 'Terminé') {
+                if ($tut->getSeance1()) $disposOccupees[] = $tut->getSeance1();
+                if ($tut->getSeance2()) $disposOccupees[] = $tut->getSeance2();
+            }
         }
 
-        // Disponibilités libres = toutes - occupées
-        $disposLibres = array_diff($dispos, $seancesOccupees);
-
-        // Si l'éducateur a des tutorats en cours, il doit avoir au moins 2 dispos libres
-        if (count($tutoratsEnCours) > 0 && count($disposLibres) < 2) {
-            return new JsonResponse(['error' => "L'éducateur n'a pas assez de disponibilités libres (minimum 2) pour accepter un nouveau tutorat."], Response::HTTP_BAD_REQUEST);
+        // Calculer les disponibilités libres
+        $disposLibres = array_diff($dispos, $disposOccupees);
+        if (count($disposLibres) < 2) {
+            return new JsonResponse(['error' => "L'éducateur n'a pas au moins 2 disponibilités libres"], Response::HTTP_BAD_REQUEST);
         }
-    {
-        $data = json_decode($request->getContent(), true);
 
         if ($data === null) {
             return new JsonResponse(['error' => 'Invalid JSON format'], Response::HTTP_BAD_REQUEST);
@@ -185,5 +181,9 @@ final class AddTutoratController extends AbstractController
 // dans AddSeanceController grâce à la méthode recalculerMontantsPaiement().
 
 // Forign key sql syntax
-// (voir migrations ou documentation SQL)
-}
+/* ALTER TABLE paiement
+ADD CONSTRAINT fk_reference_tutorat FOREIGN KEY (Reference_tutorat)
+REFERENCES tutorat (Reference_tutorat)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+ */
